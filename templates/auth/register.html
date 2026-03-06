@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration | SaaS Portal</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      .registration-card {
+        max-width: 500px;
+        width: 100%;
+        border-radius: 12px;
+      }
+
+      /* Slider Logic */
+      .step-viewport {
+        overflow: hidden;
+      }
+      .step-wrapper {
+        display: flex;
+        transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        width: 300%;
+      }
+      .step-pane {
+        width: 33.333%;
+        padding: 1.5rem;
+      }
+
+      /* Role Selector Grid */
+      .role-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+      }
+      .role-option {
+        cursor: pointer;
+        transition: 0.2s;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        text-align: center;
+        padding: 12px 3px;
+      }
+      .role-input:checked + .role-option {
+        border-color: #0d6efd;
+        background-color: #f0f7ff;
+        color: #0d6efd;
+      }
+      .role-input {
+        display: none;
+      }
+      .role-option i {
+        font-size: 1.25rem;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .role-option span {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: lowercase;
+      }
+
+      /* Progress Bar Styling */
+      .progress {
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 10px;
+      }
+      .progress-bar {
+        transition: width 0.6s ease;
+        border-radius: 10px;
+      }
+    </style>
+    <script
+      src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+      integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body
+    class="d-flex align-items-center justify-content-center vh-100 p-3 mt-5 mb-5"
+  >
+    <div
+      id="register-card"
+      class="registration-card bg-white shadow-lg overflow-hidden"
+    >
+      <div class="p-4 border-bottom bg-light">
+        <div class="text-center mb-4">
+          <h1 class="h3 mb-3 fw-bold text-primary">Registration</h1>
+        </div>
+
+        <div class="progress">
+          <div
+            id="mainProgressBar"
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            style="width: 33%"
+          ></div>
+        </div>
+      </div>
+
+      <form
+        id="regForm"
+        novalidate
+        method="post"
+        enctype="multipart/form-data"
+        hx-post="{{ url_for('register') }}"
+        hx-target="#form-errors"
+        hx-swap="innerHTML"
+      >
+        <div class="step-viewport">
+          <div class="step-wrapper" id="stepWrapper">
+            <section class="step-pane" id="pane1">
+              <div class="mb-3">
+                <label for="fullName" class="form-label fw-semibold"
+                  >Full Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullName"
+                  name="full_name"
+                  required
+                  autofocus
+                />
+              </div>
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <label for="email" class="form-label fw-semibold"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="phone" class="form-label fw-semibold"
+                    >Phone</label
+                  >
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    name="phone"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Select Role</label>
+                <div class="role-grid">
+                  {% for role in roles %}
+                  <label
+                    ><input
+                      type="radio"
+                      name="role"
+                      value="{{role}}"
+                      class="role-input"
+                      hx-get="/profile_subform?role={{role}}"
+                      hx-target="#pane2"
+                      hx-trigger="change"
+                    />
+                    <div class="role-option">
+                      <i class="bi bi-person"></i><span>{{role}}</span>
+                    </div></label
+                  >
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <label for="password" class="form-label fw-semibold"
+                    >Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    required
+                    minlength="8"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="confirmPassword" class="form-label fw-semibold"
+                    >Confirm</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-primary w-100 py-2 fw-bold"
+                onclick="moveStep(1)"
+              >
+                Next <i class="bi bi-arrow-right ms-1"></i>
+              </button>
+            </section>
+            <section class="step-pane" id="pane2"></section>
+
+            <section class="step-pane" id="pane3"></section>
+          </div>
+        </div>
+      </form>
+      <div class="text-center lg-12">
+        <p class="text-muted">
+          Already have an account?
+          <a href="/login" class="text-decoration-none">Sign in</a>
+        </p>
+      </div>
+    </div>
+    <script>
+      const stepWrapper = document.getElementById("stepWrapper");
+      const progressBar = document.getElementById("mainProgressBar");
+      const stepText = document.getElementById("stepText");
+      const stepPercent = document.getElementById("stepPercent");
+      const form = document.getElementById("regForm");
+      let currentStep = 0;
+
+      form.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault(); // Prevent form submission
+        }
+      });
+
+      function moveStep(targetStep) {
+        // Validate when moving forward
+        if (targetStep > currentStep) {
+          if (!validateCurrentPane()) return;
+        }
+
+        currentStep = targetStep;
+
+        // Slide logic
+        const shift = -(targetStep * 33.333);
+        stepWrapper.style.transform = `translateX(${shift}%)`;
+
+        // Progress Bar Update
+        const percentage = Math.round(((targetStep + 1) / 3) * 100);
+        progressBar.style.width = percentage + "%";
+        stepText.innerText = `Step ${targetStep + 1} of 3`;
+        stepPercent.innerText = percentage + "%";
+
+        // Auto-focus first input
+        const activePane = document.getElementById(`pane${targetStep + 1}`);
+        const firstInput = activePane.querySelector("input, select, textarea");
+        if (firstInput) setTimeout(() => firstInput.focus(), 600);
+      }
+
+      function validateCurrentPane() {
+        const pane = document.getElementById(`pane${currentStep + 1}`);
+        const inputs = pane.querySelectorAll("input, select, textarea");
+        let isValid = true;
+
+        // Step 1 Specific: Password Match
+        if (currentStep === 0) {
+          const p1 = document.getElementById("password");
+          const p2 = document.getElementById("confirmPassword");
+          if (p1.value !== p2.value) {
+            p2.setCustomValidity("Mismatch");
+            p2.classList.add("is-invalid");
+            isValid = false;
+          } else {
+            p2.setCustomValidity("");
+            p2.classList.remove("is-invalid");
+          }
+        }
+
+        inputs.forEach((input) => {
+          if (!input.checkValidity()) {
+            input.classList.add("is-invalid");
+            isValid = false;
+          } else {
+            input.classList.remove("is-invalid");
+            input.classList.add("is-valid");
+          }
+        });
+
+        return isValid;
+      }
+    </script>
+  </body>
+</html>
