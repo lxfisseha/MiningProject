@@ -3,9 +3,10 @@ from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from fastapi import Form
 
 from .models import UserRole, UserStatus
-
+from src.profiles import schemas as profile_schemas
 
 class ChangeMyPasswordRequest(BaseModel):
     current_password: str
@@ -29,9 +30,17 @@ class UserBase(BaseModel):
     role: UserRole
     preferred_language: str = "EN"
 
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
 
 class RegistrationRequest(UserBase):
     password: str = Field(min_length=8)
+
+    license_holder_profile: Optional[profile_schemas.LicenseHolderCreate] = None
+    equipment_owner_profile: Optional[profile_schemas.EquipmentOwnerCreate] = None
+    consultant_profile: Optional[profile_schemas.ConsultantCreate] = None
+    buyer_profile: Optional[profile_schemas.BuyerCreate] = None
 
 
 class UserResponse(UserBase):

@@ -52,8 +52,7 @@ def verify_password(plain_password, hashed_password):
     return password_hash.verify(plain_password, hashed_password)
 
 
-def save_token_response_to_cookies(token: TokenResponse):
-    response = HTMLResponse()
+def save_token_response_to_cookies(response:HTMLResponse ,token: TokenResponse):
     response.set_cookie(
         key="access_token",
         value=token.access_token,
@@ -68,5 +67,18 @@ def save_token_response_to_cookies(token: TokenResponse):
         secure=True,  # True in production (HTTPS)
         samesite="lax",
     )
-    response.headers["HX-Redirect"] = "/"
     return response
+
+def nest_dotted_form_data(form: dict):
+    nested = {}
+
+    for key, value in form.items():
+        keys = key.split(".")
+        current = nested
+
+        for k in keys[:-1]:
+            current = current.setdefault(k, {})
+
+        current[keys[-1]] = value
+
+    return nested

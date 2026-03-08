@@ -45,10 +45,9 @@
         <div class="card shadow-lg border-0">
           <div class="card-body p-4">
             <form
-              method="POST"
               hx-post="{{url_for('login_post')}}"
               hx-target="#result"
-              hx-swap="innerHTML"
+              hx-swap="outerHTML"
             >
               <div class="mb-3">
                 <label for="emailAddress" class="form-label fw-semibold"
@@ -58,7 +57,7 @@
                   type="email"
                   class="form-control"
                   id="emailAddress"
-                  name="username"
+                  name="email"
                   required
                   autofocus
                 />
@@ -98,7 +97,7 @@
               </button>
               <div class="mt-4">
                 <hr />
-                <p id="result"></p>
+              <div id="result"></div>
               </div>
             </form>
           </div>
@@ -107,7 +106,7 @@
         <div class="text-center mt-4">
           <p class="text-muted">
             Don’t have an account?
-            <a href="{{url_for('registration_form')}}" class="text-decoration-none">Sign up</a>
+            <a href="{{url_for('register')}}" class="text-decoration-none">Sign up</a>
           </p>
         </div>
       </div>

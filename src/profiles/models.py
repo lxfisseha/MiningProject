@@ -20,6 +20,9 @@ class UserProfile(BaseSQLModel):
     company_name: str | None = None
     office_address: str | None = None
 
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 
 class LicenseHolderProfile(UserProfile, table=True):
     __tablename__ = "license_holder_profiles"
@@ -33,8 +36,7 @@ class LicenseHolderProfile(UserProfile, table=True):
     geological_report_document_id: Optional[UUID] = None
     national_id_document_id: Optional[UUID] = None
 
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 
     user: auth_models.User = Relationship()
 
@@ -46,9 +48,6 @@ class EquipmentOwnerProfile(UserProfile, table=True):
 
     trade_license_document_id: Optional[UUID] = None
     national_id_document_id: Optional[UUID] = None
-
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     user: auth_models.User = Relationship()
 
@@ -63,9 +62,6 @@ class ConsultantProfile(UserProfile, table=True):
     professional_license_document_id: Optional[UUID] = None
     supporting_document_id: Optional[UUID] = None
 
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
     user: auth_models.User = Relationship()
 
 
@@ -76,8 +72,5 @@ class BuyerProfile(UserProfile, table=True):
     plant_location: str
 
     supporting_document_id: Optional[UUID] = None
-
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     user: auth_models.User = Relationship()

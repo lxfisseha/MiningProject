@@ -1,57 +1,65 @@
-from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.security import OAuth2PasswordRequestForm
-from typing import Annotated
 
 from src.database import SESSION_DEP
-from .services import registration_service, login_service
-from .schemas import UserResponse, RegistrationRequest
+from typing import Annotated
+
+
+from fastapi import APIRouter, Request, Form
+
 from .models import UserRole
-from .dependencies import CURRENT_USER_DEP
-from .utils import save_token_response_to_cookies
+from .services import login_service, registration_service
+from .schemas import LoginRequest, UserResponse, RegistrationRequest
+from .utils import save_token_response_to_cookies, nest_dotted_form_data
 
-
-router = APIRouter(
-    prefix="/auth",
-    tags=[
-        "Auth",
-    ],
-)
-
+router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
+
+client_roles = [
+    UserRole.LICENSE_HOLDER.value,
+    UserRole.EQUIPMENT_OWNER.value,
+    UserRole.CONSULTANT.value,
+    UserRole.BUYER.value,
+]
 
 
 @router.get("/login")
 async def login(request: Request):
-    return templates.TemplateResponse("/auth/login.html", {"request": request})
+    return templates.TemplateResponse("auth/login.html", {"request": request})
+
+@router.get("/register")
+async def register(
+    request: Request,
+):
+    return templates.TemplateResponse(
+        "auth/register_user.html", {"request": request, "roles": client_roles}
+    )
 
 
 @router.post("/login")
 async def login_post(
-    login_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    login_data: Annotated[LoginRequest, Form()],
     session: SESSION_DEP,
 ):
     token = login_service(login_data, session)
-    return save_token_response_to_cookies(token)
+    response = HTMLResponse()
 
+    save_token_response_to_cookies(response, token)
 
-@router.get("/register")
-async def registration_form(
-    request: Request,
-):
-    return templates.TemplateResponse(
-        "auth/register.html", {"request": request, "roles": UserRole}
-    )
+    response.headers["HX-Redirect"] = "/"
+    return response
+
 
 
 @router.post("/register")
-async def register(
-    request: Request, session: SESSION_DEP, data: Annotated[RegistrationRequest, Form()]
-):
+async def register(request: Request, session: SESSION_DEP):
+    form_data = await request.form()
+    registration_data = dict(form_data)
 
-    registration_service(data, session)
+    data = nest_dotted_form_data(registration_data)
+    registration_request = RegistrationRequest(**data)
+    registration_service(registration_request, session)
 
     return templates.TemplateResponse(
         "partials/registration_success.html",

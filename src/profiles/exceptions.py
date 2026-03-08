@@ -20,3 +20,7 @@ class ProfileRoleMissmatch(BaseException):
         self, status_code=401, message="user profile and role dont match", *args
     ):
         super().__init__(status_code, message, *args)
+
+class InvalidRoleError(BaseException):
+    def __init__(self, status_code=401, message="Invalid role", *args):
+        super().__init__(status_code, message, *args)

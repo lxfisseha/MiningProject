@@ -14,6 +14,14 @@ class CredentialsError(AuthenticationErrorBase):
     ):
         super().__init__(status_code, message, *args)
 
+class LoginError(AuthenticationErrorBase):
+    def __init__(
+        self,
+        status_code: int = 401,
+        message: str = "invalid username or password",
+        *args,
+    ):
+        super().__init__(status_code, message, *args)
 
 class EmailExistsError(BaseException):
     def __init__(
@@ -32,4 +40,19 @@ class UserNotFoundError(BaseException):
         message: str = "user not found",
         *args,
     ):
-        super().__init__(message, *args)
+        super().__init__(status_code, message, *args)
+
+class RegistrationErrorBase(BaseException):
+    def __init__(
+        self,
+        status_code: int = 422,
+        message: str = "registration failed please try again",
+        *args,
+    ):
+        super().__init__(status_code, message, *args)
+
+class FailedToCreateAuthRecord(RegistrationErrorBase):
+    pass
+
+class ProfileCreationFailedError(RegistrationErrorBase):
+    pass

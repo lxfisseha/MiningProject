@@ -33,14 +33,15 @@ class BuyerCreate(ProfileCreateBase):
     plant_location: str
 
 
-class ProfileBaseResponse(ProfileCreateBase):
+class ProfileBaseResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     user_id: UUID
     approval_fee_paid: bool
     company_name: Optional[str] = None
     office_address: Optional[str] = None
 
-    user: auth_models.User
+    created_at: datetime
+    updated_at: datetime
 
 
 class LicenseHolderProfileResponse(ProfileBaseResponse):
@@ -53,8 +54,7 @@ class LicenseHolderProfileResponse(ProfileBaseResponse):
     geological_report_document_id: Optional[UUID] = None
     national_id_document_id: Optional[UUID] = None
 
-    created_at: datetime
-    updated_at: datetime
+    user: auth_models.User
 
 
 class EquipmentOwnerProfileResponse(ProfileBaseResponse):
@@ -63,8 +63,7 @@ class EquipmentOwnerProfileResponse(ProfileBaseResponse):
     trade_license_document_id: Optional[UUID] = None
     national_id_document_id: Optional[UUID] = None
 
-    created_at: datetime
-    updated_at: datetime
+    user: auth_models.User
 
 
 class ConsultantProfileResponse(ProfileBaseResponse):
@@ -75,8 +74,7 @@ class ConsultantProfileResponse(ProfileBaseResponse):
     professional_license_document_id: Optional[UUID] = None
     supporting_document_id: Optional[UUID] = None
 
-    created_at: datetime
-    updated_at: datetime
+    user: auth_models.User
 
 
 class BuyerProfileResponse(ProfileBaseResponse):
@@ -85,8 +83,7 @@ class BuyerProfileResponse(ProfileBaseResponse):
 
     supporting_document_id: Optional[UUID] = None
 
-    created_at: datetime
-    updated_at: datetime
+    user: auth_models.User
 
 
 class ProfileUpdateBase(BaseModel):
