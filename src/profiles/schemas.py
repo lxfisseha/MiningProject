@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import datetime
 from uuid import UUID
@@ -123,3 +123,10 @@ class BuyerProfileUpdate(ProfileUpdateBase):
     plant_location: Optional[str] = None
 
     supporting_document_id: Optional[UUID] = None
+
+
+class ProfileRegistrationRequest(BaseModel):
+    license_holder_profile: Optional[LicenseHolderCreate] = None
+    equipment_owner_profile: Optional[EquipmentOwnerCreate] = None
+    consultant_profile: Optional[ConsultantCreate] = None
+    buyer_profile: Optional[BuyerCreate] = None

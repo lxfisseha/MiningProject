@@ -1,0 +1,9 @@
+    <div
+            hx-get="{{url_for('file_upload_form', user_id=user_id)}}"
+            hx-target="#body"
+            hx-trigger="load delay:1s"
+            class="alert alert-success d-flex align-items-center mb-0 py-2 border-0"
+    >
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <small>{{msg}}</small>
+        </div>

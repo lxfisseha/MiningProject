@@ -1,0 +1,9 @@
+    <div
+            hx-get="{{ url_for('registration_success') }}"
+            hx-target="#body"
+            hx-trigger="load delay:1s"
+            class="alert alert-success d-flex align-items-center mb-0 py-2 border-0"
+    >
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <small>{{msg}}</small>
+        </div>

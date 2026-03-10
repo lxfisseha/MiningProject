@@ -1,3 +1,5 @@
+from multiprocessing.context import AuthenticationError
+
 from src.exceptions import BaseException
 
 
@@ -23,11 +25,11 @@ class LoginError(AuthenticationErrorBase):
     ):
         super().__init__(status_code, message, *args)
 
-class EmailExistsError(BaseException):
+class UnApprovedUserErrorLogin(LoginError):
     def __init__(
         self,
         status_code: int = 401,
-        message: str = "email is already in use.",
+        message: str = "User is not yet approved",
         *args,
     ):
         super().__init__(status_code, message, *args)
@@ -50,6 +52,16 @@ class RegistrationErrorBase(BaseException):
         *args,
     ):
         super().__init__(status_code, message, *args)
+
+class EmailExistsError(RegistrationErrorBase):
+    def __init__(
+        self,
+        status_code: int = 401,
+        message: str = "email is already in use.",
+        *args,
+    ):
+        super().__init__(status_code, message, *args)
+
 
 class FailedToCreateAuthRecord(RegistrationErrorBase):
     pass

@@ -1,0 +1,56 @@
+
+    <div
+      class="registration-card bg-white shadow-lg"
+    >
+      <div class="p-4 border-bottom bg-light">
+        <div class="text-center mb-4">
+          <h1 class="h3 mb-3 fw-bold text-primary">Upload Files</h1>
+        </div>
+
+        <div class="progress">
+          <div
+            id="mainProgressBar"
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            style="width: 66%"
+          ></div>
+        </div>
+      </div>
+
+      <form
+        id="regForm"
+        hx-post="{{url_for('file_upload_form_post', user_id=user.id)}}"
+        hx-target="#result"
+        hx-swap="innerHTML"
+        enctype="multipart/form-data"
+        novalidate
+      >
+        <div class="px-4 pt-4">
+            {% if user.role == roles.LICENSE_HOLDER %}
+                {%include 'auth/partials/_license_holder_file_upload_form.html'%}
+            {% elif user.role==roles.BUYER %}
+                {%include 'auth/partials/_buyer_file_upload_form.html'%}
+            {% elif user.role==roles.EQUIPMENT_OWNER %}
+                {%include 'auth/partials/_equipment_owner_file_upload_form.html'%}
+            {% elif user.role==roles.CONSULTANT %}
+                {%include 'auth/partials/_consultant_file_upload_form.html'%}
+            {% endif %}
+            <div class="row g-3 mt-0 mb-4">
+                <div id="result"></div>
+                 <button
+                  type="submit"
+                  class="btn btn-primary w-100 py-2 fw-bold"
+                >
+                  Complete Registration
+                </button>
+                <div class="mt-0">
+                    <hr />
+
+                  </div>
+
+
+            </div>
+
+        </div>
+      </form>
+    </div>

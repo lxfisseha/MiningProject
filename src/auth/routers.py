@@ -9,7 +9,7 @@ from fastapi import APIRouter, Request, Form
 
 from .models import UserRole
 from .services import login_service, registration_service
-from .schemas import LoginRequest, UserResponse, RegistrationRequest
+from .schemas import LoginRequest, UserResponse, RegisterUserRequest
 from .utils import save_token_response_to_cookies, nest_dotted_form_data
 
 router = APIRouter()
@@ -52,20 +52,16 @@ async def login_post(
 
 
 
+
+
 @router.post("/register")
 async def register(request: Request, session: SESSION_DEP):
     form_data = await request.form()
-    registration_data = dict(form_data)
 
-    data = nest_dotted_form_data(registration_data)
-    registration_request = RegistrationRequest(**data)
-    registration_service(registration_request, session)
+    registration_request = RegisterUserRequest(**dict(form_data))
+    new_user = registration_service(registration_request, session)
 
     return templates.TemplateResponse(
-        "partials/registration_success.html",
-        {"request": request},
-        headers={
-            "HX-Retarget": "#register-card",
-            "HX-Reswap": "outerHTML",
-        },
+        "auth/partials/_registration_success_response.html",
+        {"request": request, "msg": "user registered successfully!", "user_id": new_user.id},
     )
