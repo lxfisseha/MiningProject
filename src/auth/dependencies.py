@@ -1,4 +1,5 @@
-from fastapi import Depends
+from fastapi import Depends, Request
+from .exceptions import LoginRequiredError
 from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
 
@@ -17,7 +18,7 @@ def get_current_user(session: SESSION_DEP, token: str = Depends(oauth2_scheme)):
 
     user: User = session.get(User, token_data.id)
     if not user:
-        raise UserNotFoundError()
+        raise CredentialsError()
     if user.role != token_data.role:
         raise CredentialsError()
     if user.status != UserStatus.APPROVED:
@@ -37,7 +38,18 @@ def get_current_admin(current_user: User = Depends(get_current_user)):
         raise CredentialsError()
     return current_user
 
+def get_current_user_from_cookie(request: Request, session: SESSION_DEP):
+    token = request.cookies.get("access_token")
+    try:
+        user: User = get_current_user(session, token)
+        return user
+    except Exception as e:
+        raise LoginRequiredError()
+
+
 
 CURRENT_USER_DEP = Annotated[User, Depends(get_current_user)]
 CURRENT_STAFF_OR_ADMIN_DEP = Annotated[User, Depends(get_current_staff_or_admin)]
 CURRENT_ADMIN_DEP = Annotated[User, Depends(get_current_admin)]
+
+CURRENT_USER_FROM_COOKIE = Annotated[User, Depends(get_current_user_from_cookie)]

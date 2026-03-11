@@ -1,0 +1,20 @@
+<div class="role-section">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted text-uppercase">Company Name</label>
+            <input type="text" name="consultant_profile.company_name" class="form-control" value="{{current_user.consultant_profile.company_name}}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted text-uppercase">Office Address</label>
+            <input type="text" name="consultant_profile.office_address" class="form-control" value="{{current_user.consultant_profile.office_address}}">
+        </div>
+        <div class="col-md-8">
+            <label class="form-label small fw-bold text-muted text-uppercase">Expertise Areas</label>
+            <input type="text" name="consultant_profile.expertise_areas" class="form-control" value="{{current_user.consultant_profile.expertise_areas}}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label small fw-bold text-muted text-uppercase">Years of Experience</label>
+            <input type="number" name="consultant_profile.years_of_experience" class="form-control" min="0" value="{{current_user.consultant_profile.years_of_experience}}">
+        </div>
+    </div>
+</div>

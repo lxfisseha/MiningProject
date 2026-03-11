@@ -51,3 +51,9 @@ class MeResponse(UserResponse):
 class RegistrationStatusResponse(BaseModel):
     status: UserStatus
     message: str
+
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
+    preferred_language: Optional[str] = None

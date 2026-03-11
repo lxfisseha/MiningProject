@@ -1,12 +1,16 @@
-from sqlmodel import select, Session
+from sqlmodel import select, Session, SQLModel
 
 from src.auth import models as auth_models
-from .models import BuyerProfile, LicenseHolderProfile, EquipmentOwnerProfile, ConsultantProfile
-from .exceptions import ProfileInfoMissingError, InvalidRoleError, UserAlreadyHasProfileError
+from .models import BuyerProfile, LicenseHolderProfile, EquipmentOwnerProfile, ConsultantProfile, UserProfile
+from .exceptions import ProfileInfoMissingError, InvalidRoleError, UserAlreadyHasProfileError, NotAllowed, \
+    IncompleteRegistrationProfileNotFoundError
 from .schemas import ProfileRegistrationRequest, LicenseHolderCreate, EquipmentOwnerCreate, BuyerCreate, \
-    ConsultantCreate
+    ConsultantCreate, UserAndProfileUpdate, ProfileUpdateRequest, BuyerProfileUpdate, LicenseHolderProfileUpdate, \
+    ConsultantProfileUpdate, EquipmentOwnerProfileUpdate, UserAndProfileResponse
 from uuid import UUID
 
+from ..auth.exceptions import UserNotFoundError, NotAllowedError, EmailExistsError
+from ..auth.models import User, UserRole
 from ..auth.services import get_user_by_id
 
 def create_user_profile(registration_data: ProfileRegistrationRequest, session: Session, user_id: UUID):
@@ -22,6 +26,10 @@ def create_user_profile(registration_data: ProfileRegistrationRequest, session: 
         profile = create_buyer_profile(registration_data.buyer_profile, session, user.id)
     else:
         raise InvalidRoleError()
+
+    session.add(profile)
+    session.commit()
+    session.refresh(profile)
     return profile
 
 def create_buyer_profile(data: BuyerCreate, session, user_id):
@@ -29,9 +37,6 @@ def create_buyer_profile(data: BuyerCreate, session, user_id):
     if existing_profile:
         raise UserAlreadyHasProfileError()
     profile = BuyerProfile.model_validate(data, update={"user_id": user_id})
-    session.add(profile)
-    session.commit()
-    session.refresh(profile)
     return profile
 
 
@@ -40,9 +45,6 @@ def create_consultant_profile(data: ConsultantCreate, session, user_id):
     if existing_profile:
         raise UserAlreadyHasProfileError()
     profile = ConsultantProfile.model_validate(data, update={"user_id": user_id})
-    session.add(profile)
-    session.commit()
-    session.refresh(profile)
     return profile
 
 
@@ -51,9 +53,6 @@ def create_equipment_owner_profile(data: EquipmentOwnerCreate, session, user_id)
     if existing_profile:
         raise UserAlreadyHasProfileError()
     profile = EquipmentOwnerProfile.model_validate(data, update={"user_id": user_id})
-    session.add(profile)
-    session.commit()
-    session.refresh(profile)
     return profile
 
 
@@ -63,9 +62,6 @@ def create_license_holder_profile(data: LicenseHolderCreate, session, user_id):
         raise UserAlreadyHasProfileError()
 
     profile = LicenseHolderProfile.model_validate(data, update={"user_id": user_id})
-    session.add(profile)
-    session.commit()
-    session.refresh(profile)
     return profile
 
 def _validate_role_profile_consistency(registration_data: ProfileRegistrationRequest, role: auth_models.UserRole):
@@ -79,3 +75,66 @@ def _validate_role_profile_consistency(registration_data: ProfileRegistrationReq
         raise ProfileInfoMissingError()
     if role == auth_models.UserRole.BUYER and not registration_data.buyer_profile:
         raise ProfileInfoMissingError()
+
+def update_profile(actor: User, user_id: UUID, data: ProfileUpdateRequest, session: Session):
+    user = get_user_by_id(user_id, session)
+    if not user:
+        raise UserNotFoundError()
+    if not actor:
+        raise NotAllowed()
+
+    if user.id != actor.id and actor.role not in [UserRole.ADMIN, UserRole.STAFF]:
+        raise NotAllowed()
+
+    profile = get_profile_by_user(user, session)
+
+    # Update profile based on role
+    if user.role == UserRole.LICENSE_HOLDER:
+        updated_profile = profile.sqlmodel_update(data.license_holder_profile.model_dump(exclude_unset=True))
+    elif user.role == UserRole.EQUIPMENT_OWNER :
+        updated_profile = profile.sqlmodel_update(data.equipment_owner_profile.model_dump(exclude_unset=True))
+    elif user.role == UserRole.CONSULTANT:
+        updated_profile = profile.sqlmodel_update(data.consultant_profile.model_dump(exclude_unset=True))
+    elif user.role == UserRole.BUYER:
+        updated_profile = profile.sqlmodel_update(data.buyer_profile.model_dump(exclude_unset=True))
+
+    session.add(updated_profile)
+    session.commit()
+    session.refresh(updated_profile)
+    return updated_profile
+
+def get_profile_by_user(user: auth_models.User, session: Session) -> UserProfile:
+    if user.role == UserRole.LICENSE_HOLDER:
+        model = LicenseHolderProfile
+    elif user.role == UserRole.EQUIPMENT_OWNER :
+        model = EquipmentOwnerProfile
+    elif user.role == UserRole.CONSULTANT:
+        model = ConsultantProfile
+    elif user.role == UserRole.BUYER:
+        model = BuyerProfile
+    else:
+        InvalidRoleError()
+
+    profile: UserProfile = session.exec(
+        select(model).where(model.user_id == user.id)
+    ).first()
+
+    if not profile:
+        raise IncompleteRegistrationProfileNotFoundError(user_id=user.id)
+
+    return profile
+
+
+def get_user_with_profile(user: User, session: Session) -> UserAndProfileResponse:
+    response = UserAndProfileResponse.model_validate(user)
+    profile = get_profile_by_user(user, session).model_dump()
+    if user.role == UserRole.LICENSE_HOLDER:
+        response.license_holder_profile = profile
+    if user.role == UserRole.EQUIPMENT_OWNER:
+        response.equipment_owner_profile = profile
+    if user.role == UserRole.CONSULTANT:
+        response.consultant_profile = profile
+    if user.role == UserRole.BUYER:
+        response.buyer_profile = profile
+
+    return response

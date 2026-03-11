@@ -1,0 +1,71 @@
+<div
+  class="role-section"
+>
+  <div class="row g-3">
+    <div class="col-md-12">
+      <label class="form-label small fw-bold text-muted text-uppercase"
+        >Company Name</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        name="license_holder_profile.company_name"
+        value="{{current_user.license_holder_profile.company_name}}"
+      />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label small fw-bold text-muted text-uppercase"
+        >Office Address</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        name="license_holder_profile.office_address"
+        value="{{current_user.license_holder_profile.office_address}}"
+      />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label small fw-bold text-muted text-uppercase"
+        >Site Address</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        name="license_holder_profile.site_address"
+        value="{{current_user.license_holder_profile.site_address}}"
+      />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label small fw-bold text-muted text-uppercase"
+        >License Type</label
+      >
+      <select class="form-select" name="license_holder_profile.license_type">
+        {% for license_type in license_types %}
+        <option 
+          {%if current_user.license_holder_profile.license_type==license_type %}selected{%endif%}
+          value="{{license_type.value}}"
+        >
+          {{license_type.value}}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label small fw-bold text-muted text-uppercase"
+        >Material Type</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        name="license_holder_profile.material_type"
+        value="{{current_user.license_holder_profile.material_type}}"
+      />
+    </div>
+    <div class="col-12">
+      <label class="form-label small fw-bold text-muted text-uppercase"
+        >License Number</label
+      >
+      <input type="text" class="form-control" name="license_holder_profile.license_number" value="{{current_user.license_holder_profile.license_number}}"/>
+    </div>
+  </div>
+</div>

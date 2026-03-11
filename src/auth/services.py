@@ -5,10 +5,12 @@ from typing import Annotated
 
 from .utils import hash_password, verify_password, create_access_token
 from .models import User, UserAuth, UserRole, UserStatus
-from .schemas import LoginRequest, TokenResponse, RegisterUserRequest
+from .schemas import LoginRequest, TokenResponse, RegisterUserRequest, ChangeMyPasswordRequest, UserUpdate
 
 from .exceptions import LoginError, UserNotFoundError, EmailExistsError, FailedToCreateAuthRecord, \
-    UnApprovedUserErrorLogin
+    UnApprovedUserErrorLogin, AuthenticationErrorBase
+from .exceptions import WrongPasswordError, NotAllowedError
+from ..profiles.exceptions import NotAllowed
 
 
 def get_user_by_id(user_id: UUID, session: Session):
@@ -58,9 +60,45 @@ def registration_service(registration_data: RegisterUserRequest, session: Sessio
     return new_user
 
 def _create_user_auth_record(password: str, user_id: UUID, session: Session):
-    try:
-        hashed_password = hash_password(password)
-        user_auth = UserAuth(user_id=user_id, hashed_password=hashed_password)
-        session.add(user_auth)
-    except:
-        raise FailedToCreateAuthRecord()
+    hashed_password = hash_password(password)
+    user_auth = UserAuth(user_id=user_id, hashed_password=hashed_password)
+    session.add(user_auth)
+
+def update_user(actor: User, user_id: UUID, data:UserUpdate, session:Session):
+    user = session.get(User, user_id)
+
+    if not user:
+        raise UserNotFoundError()
+    if not actor:
+        raise NotAllowed()
+
+    if user.id != actor.id and actor.role not in [UserRole.ADMIN, UserRole.STAFF]:
+        raise NotAllowed()
+
+    if data.email:
+        existing_user = session.exec(select(User).where(User.email == data.email)).first()
+        if existing_user and existing_user.id != user_id:
+            raise EmailExistsError()
+
+    updated_user = user.sqlmodel_update(data.model_dump(exclude_unset=True))
+    session.add(updated_user)
+    session.commit()
+    session.refresh(updated_user)
+
+    return updated_user
+
+
+def change_my_password(session: Session, actor: User, user_id: UUID, data: ChangeMyPasswordRequest):
+    user = session.get(User, user_id)
+    if not user:
+        raise UserNotFoundError
+    if actor.id != user.id:
+        raise NotAllowedError()
+
+    if not verify_password(data.current_password, user.user_auth.hashed_password):
+        raise WrongPasswordError()
+
+    user.user_auth.hashed_password = hash_password(data.new_password)
+    session.add(user.user_auth)
+    session.commit()
+    return 1

@@ -1,10 +1,10 @@
 
     <div
-      class="registration-card bg-white shadow-lg overflow-hidden"
+      class="registration-card bg-white shadow-lg"
     >
       <div class="p-4 border-bottom bg-light">
         <div class="text-center mb-4">
-          <h1 class="h3 mb-3 fw-bold text-primary">Profile Information</h1>
+          <h1 class="h3 mb-3 fw-bold text-primary">Upload Files</h1>
         </div>
 
         <div class="progress">
@@ -19,29 +19,29 @@
 
       <form
         id="regForm"
-        hx-post="{{url_for('register_profile', user_id=user.id)}}"
+        hx-post="{{url_for('file_upload_form_post', user_id=user.id)}}"
         hx-target="#result"
         hx-swap="innerHTML"
         enctype="multipart/form-data"
+        novalidate
       >
         <div class="px-4 pt-4">
-            {% if user.role ==roles.LICENSE_HOLDER %}
-                {%include 'auth/partials/_license_holder_profile_registration.html'%}
+            {% if user.role == roles.LICENSE_HOLDER %}
+                {%include 'profiles/_file_upload_form_license_holder.html'%}
             {% elif user.role==roles.BUYER %}
-                {%include 'auth/partials/_buyer_profile_registration.html'%}
+                {%include 'profiles/_file_upload_form_buyer.html'%}
             {% elif user.role==roles.EQUIPMENT_OWNER %}
-                {%include 'auth/partials/_equipment_owner_profile_registration.html'%}
+                {%include 'profiles/_file_upload_form_equipment_owner.html'%}
             {% elif user.role==roles.CONSULTANT %}
-                {%include 'auth/partials/_consultant_profile_registration.html'%}
+                {%include 'profiles/_file_upload_form_consultant.html'%}
             {% endif %}
-
-            <div class="row g-2 mt-0 mb-4">
+            <div class="row g-3 mt-0 mb-4">
                 <div id="result"></div>
                  <button
                   type="submit"
                   class="btn btn-primary w-100 py-2 fw-bold"
                 >
-                  Submit Profile
+                  Complete Registration
                 </button>
                 <div class="mt-0">
                     <hr />
@@ -50,6 +50,7 @@
 
 
             </div>
+
         </div>
       </form>
     </div>

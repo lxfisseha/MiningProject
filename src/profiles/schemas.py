@@ -5,7 +5,53 @@ from uuid import UUID
 
 from .models import LicenseType
 from src.auth import models as auth_models
+from src.auth import schemas as auth_schemas
+from ..auth.schemas import UserResponse
 
+
+class BaseProfileUpdate(BaseModel):
+    company_name: Optional[str] = None
+    office_address: Optional[str] = None
+
+
+class LicenseHolderProfileUpdate(BaseProfileUpdate):
+    site_address: Optional[str] = None
+    license_type: Optional[LicenseType] = None
+    material_type: Optional[str] = None
+    license_number: Optional[str] = None
+
+    license_certificate_document_id: Optional[UUID] = None
+    geological_report_document_id: Optional[UUID] = None
+    national_id_document_id: Optional[UUID] = None
+
+class EquipmentOwnerProfileUpdate(BaseProfileUpdate):
+    equipment_types_owned: Optional[str] = None
+
+    trade_license_document_id: Optional[UUID] = None
+    national_id_document_id: Optional[UUID] = None
+
+
+class ConsultantProfileUpdate(BaseProfileUpdate):
+    expertise_areas: Optional[str] = None
+    years_of_experience: Optional[str] = None
+
+    national_id_document_id: Optional[UUID] = None
+    professional_license_document_id: Optional[UUID] = None
+    supporting_document_id: Optional[UUID] = None
+
+class BuyerProfileUpdate(BaseProfileUpdate):
+    industry_type: Optional[str] = None
+    plant_location: Optional[str] = None
+
+    supporting_document_id: Optional[UUID] = None
+
+class UserAndProfileUpdate(BaseModel):
+    user: Optional[auth_schemas.UserUpdate] = None
+
+    license_holder_profile: Optional[LicenseHolderProfileUpdate] = None
+    equipment_owner_profile: Optional[EquipmentOwnerProfileUpdate] = None
+    consultant_profile: Optional[ConsultantProfileUpdate] = None
+    buyer_profile: Optional[BuyerProfileUpdate] = None
 
 class ProfileCreateBase(BaseModel):
     company_name: str | None = None
@@ -86,43 +132,12 @@ class BuyerProfileResponse(ProfileBaseResponse):
     user: auth_models.User
 
 
-class ProfileUpdateBase(BaseModel):
-    company_name: Optional[str] = None
-    office_address: Optional[str] = None
+class UserAndProfileResponse(UserResponse):
+    license_holder_profile: Optional[LicenseHolderProfileResponse] = None
+    equipment_owner_profile: Optional[EquipmentOwnerProfileResponse] = None
+    consultant_profile: Optional[ConsultantProfileResponse] = None
+    buyer_profile: Optional[BuyerProfileResponse] = None
 
-
-class LicenseHolderProfileUpdate(ProfileUpdateBase):
-    site_address: Optional[str] = None
-    license_type: Optional[LicenseType] = None
-    material_type: Optional[str] = None
-    license_number: Optional[str] = None
-
-    license_certificate_document_id: Optional[UUID] = None
-    geological_report_document_id: Optional[UUID] = None
-    national_id_document_id: Optional[UUID] = None
-
-
-class EquipmentOwnerProfileUpdate(ProfileUpdateBase):
-    equipment_types_owned: Optional[str] = None
-
-    trade_license_document_id: Optional[UUID] = None
-    national_id_document_id: Optional[UUID] = None
-
-
-class ConsultantProfileUpdate(ProfileUpdateBase):
-    expertise_areas: Optional[str] = None
-    years_of_experience: Optional[str] = None
-
-    national_id_document_id: Optional[UUID] = None
-    professional_license_document_id: Optional[UUID] = None
-    supporting_document_id: Optional[UUID] = None
-
-
-class BuyerProfileUpdate(ProfileUpdateBase):
-    industry_type: Optional[str] = None
-    plant_location: Optional[str] = None
-
-    supporting_document_id: Optional[UUID] = None
 
 
 class ProfileRegistrationRequest(BaseModel):
@@ -130,3 +145,9 @@ class ProfileRegistrationRequest(BaseModel):
     equipment_owner_profile: Optional[EquipmentOwnerCreate] = None
     consultant_profile: Optional[ConsultantCreate] = None
     buyer_profile: Optional[BuyerCreate] = None
+
+class ProfileUpdateRequest(BaseModel):
+    license_holder_profile: Optional[LicenseHolderProfileUpdate] = None
+    equipment_owner_profile: Optional[EquipmentOwnerProfileUpdate] = None
+    consultant_profile: Optional[ConsultantProfileUpdate] = None
+    buyer_profile: Optional[BuyerProfileUpdate] = None

@@ -1,5 +1,8 @@
+import time
+
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.responses import RedirectResponse
 
 from src.database import SESSION_DEP
 from typing import Annotated
@@ -7,9 +10,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Request, Form
 
+from .dependencies import CURRENT_USER_FROM_COOKIE
 from .models import UserRole
-from .services import login_service, registration_service
-from .schemas import LoginRequest, UserResponse, RegisterUserRequest
+from .services import login_service, registration_service, change_my_password, update_user
+from .schemas import LoginRequest, UserResponse, RegisterUserRequest, ChangeMyPasswordRequest, UserUpdate
 from .utils import save_token_response_to_cookies, nest_dotted_form_data
 
 router = APIRouter()
@@ -33,7 +37,7 @@ async def register(
     request: Request,
 ):
     return templates.TemplateResponse(
-        "auth/register_user.html", {"request": request, "roles": client_roles}
+        "auth/registration.html", {"request": request, "roles": client_roles}
     )
 
 
@@ -51,6 +55,13 @@ async def login_post(
     return response
 
 
+@router.get("/logout")
+async def logout(request: Request):
+    response = RedirectResponse("/login", status_code=303)
+    response.delete_cookie("access_token")
+    response.delete_cookie("token_type")
+    return response
+
 
 
 
@@ -65,3 +76,27 @@ async def register(request: Request, session: SESSION_DEP):
         "auth/partials/_registration_success_response.html",
         {"request": request, "msg": "user registered successfully!", "user_id": new_user.id},
     )
+
+
+@router.patch("/me")
+async def edit_user(request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP):
+    form_data = await request.form()
+    data = UserUpdate(**dict(form_data))
+    time.sleep(1)
+
+    update_user(current_user,current_user.id, data, session)
+
+    return templates.TemplateResponse("_success_alert.html", context={"request": request, "msg": "user updated successfully." })
+
+
+@router.post("/change_password")
+async def change_password(
+    request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP
+):
+    form_data = await request.form()
+    data = ChangeMyPasswordRequest(**dict(form_data))
+
+    change_my_password(session, current_user, current_user.id, data)
+
+    return templates.TemplateResponse("_success_alert.html", context={"request": request, "msg": "password changed successfully!"})
+

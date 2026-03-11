@@ -13,6 +13,8 @@ from src.profiles.models import (
     ConsultantProfile,
 )
 
+from src.requests.models import *
+
 from alembic import context
 
 # this is the Alembic Config object, which provides

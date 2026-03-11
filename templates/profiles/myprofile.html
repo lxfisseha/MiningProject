@@ -1,0 +1,188 @@
+{% extends 'base.html'  %}
+
+
+
+    {% block title %}}My Profile | Dashboard {% endblock title %}
+
+    {% block page_styles %}
+      <style>
+      /* Minimal custom CSS for subtle dashboard aesthetics */
+      body {
+        background-color: #f8f9fa;
+      }
+
+      .card {
+        border: none;
+        border-radius: 0.75rem;
+      }
+      .tracking-tight {
+        letter-spacing: -0.025em;
+      }
+    </style>
+    {% endblock page_styles %}
+
+    {% block body %}
+
+    {% include "navbar.html" %}
+      <div class="container mb-5">
+        <div class="row g-4">
+          <div class="col-12 col-lg-8">
+            <section class="card shadow-sm mb-4">
+              <div class="card-header bg-white py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5 class="card-title mb-0 fw-bold">User Information</h5>
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#accountSettingsModal"
+                    class="btn btn-white border shadow-sm fw-semibold"
+                  >
+                    <i class="bi bi-pencil-square me-2"></i>Edit Profile
+                  </a>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label class="small text-muted mb-1">Full Name</label>
+                    <p class="fw-medium">{{current_user.full_name}}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="small text-muted mb-1">Email Address</label>
+                    <input
+                      type="text"
+                      class="form-control-plaintext fw-medium p-0"
+                      value="{{current_user.email}}"
+                      readonly
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="small text-muted mb-1">Phone Number</label>
+                    <p class="fw-medium">{{current_user.phone}}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="small text-muted mb-1">Role</label>
+                    <p class="fw-medium text-primary">
+                      {{current_user.role.value}}
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="small text-muted mb-1"
+                      >Preferred Language</label
+                    >
+                    <p class="fw-medium">{{current_user.preferred_language}}</p>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="small text-muted mb-1">Member Since</label>
+                    <p class="fw-medium">
+                      {{current_user.created_at.strftime("%d %b %Y")}}
+                    </p>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="small text-muted mb-1">Last Updated</label>
+                    <p class="fw-medium">
+                      {{current_user.created_at.strftime("%d %b %Y")}}
+                    </p>
+                  </div>
+                </div>
+                <hr class="my-4" />
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm mb-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#changePasswordModal"
+                >
+                  <i class="bi bi-shield-lock me-2"></i>Change Password
+                </button>
+              </div>
+            </section>
+            {% if current_user.role == user_roles.LICENSE_HOLDER %}
+              {% include "profiles/_display_license_holder_profile.html" %}
+            {% elif current_user.role == user_roles.BUYER %}
+              {% include "profiles/_display_buyer_profile.html" %}
+            {% elif current_user.role == user_roles.CONSULTANT %}
+              {% include "profiles/_display_consultant_profile.html" %}
+            {% elif current_user.role == user_roles.EQUIPMENT_OWNER %}
+              {% include "profiles/_display_equipment_owner_profile.html" %}
+            {% endif %}
+          </div>
+
+          <div class="col-12 col-lg-4">
+            <section class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h6 class="fw-bold mb-3">Verification Status</h6>
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="text-muted small">Approval Fee Paid</span>
+                  <span class="badge bg-success-subtle text-success">YES</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span class="text-muted small">Account Status</span>
+                  {% if current_user.status == user_status.APPROVED %}
+                  <span class="text-success fw-bold small"
+                    >{{current_user.status.value}}</span
+                  >
+                  {% elif current_user.status == user_status.PENDING %}
+                  <span class="text-warning fw-bold small"
+                    >{{current_user.status.value}}</span
+                  >
+                  {% else %}
+                  <span class="text-danger fw-bold small"
+                    >{{current_user.status.value}}</span
+                  >
+                  {% endif %}
+                </div>
+              </div>
+            </section>
+
+            <section class="card shadow-sm mb-4">
+              <div class="card-body p-4">
+                <h6 class="fw-bold mb-4 text-center">My Requests Summary</h6>
+                <div class="row text-center g-0">
+                  <div class="col-4 border-end">
+                    <h4 class="fw-bold mb-0">{{user_stats.total_requests}}</h4>
+                    <small class="text-muted">Total</small>
+                  </div>
+                  <div class="col-4 border-end">
+                    <h4 class="fw-bold mb-0 text-warning">
+                      {{user_stats.pending_requests}}
+                    </h4>
+                    <small class="text-muted">Pending</small>
+                  </div>
+                  <div class="col-4">
+                    <h4 class="fw-bold mb-0 text-success">
+                      {{user_stats.completed_requests}}
+                    </h4>
+                    <small class="text-muted">Completed</small>
+                  </div>
+                </div>
+                <a
+                  href="{{ url_for('my_requests') }}"
+                  class="btn btn-light border w-100 mt-4 fw-semibold"
+                >
+                  View All Requests
+                </a>
+              </div>
+            </section>
+
+            <section class="card border-danger-subtle shadow-sm mb-4">
+              <div class="card-body">
+                <h6 class="fw-bold mb-3">More Actions</h6>
+                <a
+                  href="{{url_for('logout')}}"
+                  class="btn btn-outline-danger w-100 btn-sm fw-bold"
+                >
+                  Logout
+                </a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      {% include "profiles/_change_password_modal.html" %}
+      {% include "profiles/_edit_profile_modal.html" %}
+      {% include "footer.html"  %}
+      {% endblock body %}
+    {% block page_scripts_bottom %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock page_scripts_bottom %}
+

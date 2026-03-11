@@ -1,0 +1,56 @@
+<section class="card shadow-sm mb-4">
+  <div class="card-header bg-white py-3">
+    <h5 class="card-title mb-0 fw-bold">Company Information</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="small text-muted mb-1">Company Name</label>
+        <p class="fw-medium">
+          {{current_user.license_holder_profile.company_name}}
+        </p>
+      </div>
+      <div class="col-md-6">
+        <label class="small text-muted mb-1">Office Address</label>
+        <p class="fw-medium">
+          {{current_user.license_holder_profile.office_address}}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card shadow-sm">
+  <div class="card-header bg-white py-3">
+    <h5 class="card-title mb-0 fw-bold">License Holder Inforation</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="small text-muted mb-1">License Type</label>
+        <p class="fw-medium">
+          {{current_user.license_holder_profile.license_type.value}}
+        </p>
+      </div>
+      <div class="col-md-6">
+        <label class="small text-muted mb-1">License Number</label>
+        <p class="fw-medium">
+          {{current_user.license_holder_profile.license_number}}
+        </p>
+      </div>
+      <div class="col-md-6">
+        <label class="small text-muted mb-1">Material Type</label>
+        <p class="fw-medium">
+          {{current_user.license_holder_profile.material_type}}
+        </p>
+      </div>
+      <div class="col-md-6">
+        <label class="small text-muted mb-1">Site Address</label>
+        <p class="fw-medium">
+          {{current_user.license_holder_profile.site_address}}
+        </p>
+      </div>
+    </div>
+    {% include "profiles/_documents_list.html" %}
+  </div>
+</section>
