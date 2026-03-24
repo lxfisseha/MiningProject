@@ -2,7 +2,7 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime, timezone
 from pydantic import BaseModel, ConfigDict
-from .enums import RequestType, RequestStatus, ConsultancyType, StudyLevel
+from .enums import RequestType, RequestStatus, ConsultancyType, StudyLevel, RequestSortOptions
 
 from src.profiles.models import LicenseType
 
@@ -10,11 +10,19 @@ from src.profiles.models import LicenseType
 # ===================
 # Request Schemas
 # ===================
+class RequestFilters(BaseModel):
+    offset: int = 0
+    limit: int = 10
+    exclude_cancelled: bool = False
+    request_types: list[RequestType] = []
+    sorting: RequestSortOptions = RequestSortOptions.latest_first
+
 
 class RequestBase(BaseModel):
     requester_id: UUID
     request_type: RequestType
     status: Optional[RequestStatus] = RequestStatus.NEW
+    more_detail: Optional[str] = None
 
 
 class OtherRequestCreate(BaseModel):
@@ -30,17 +38,12 @@ class OtherRequestResponse(RequestBase):
     id: UUID
 
 
-class RequestUpdate(BaseModel):
-    status: Optional[RequestStatus] = None
-
-
 class RequestResponse(RequestBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
     created_at: datetime
     updated_at: datetime
-
 
 # =========================
 # ConsultingRequest Schemas
@@ -77,8 +80,6 @@ class ConsultingRequestUpdate(BaseModel):
 class ConsultingRequestResponse(ConsultingRequestBase):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
-    request_id: UUID
-    request: Optional[RequestResponse] = None
 
 
 # =========================
@@ -114,7 +115,6 @@ class MineralSellerRequestUpdate(BaseModel):
 class MineralSellerRequestResponse(MineralSellerRequestBase):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
-    request: Optional[RequestResponse] = None
 
 
 # =========================
@@ -150,7 +150,6 @@ class LicenseSellRequestUpdate(BaseModel):
 class LicenseSellRequestResponse(LicenseSellRequestBase):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
-    request: Optional[RequestResponse] = None
 
 
 # =========================
@@ -186,6 +185,26 @@ class MineralBuyerRequestUpdate(BaseModel):
 class MineralBuyerRequestResponse(MineralBuyerRequestBase):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
-    request: Optional[RequestResponse] = None
 
+class RequestDetailResponse(RequestResponse):
+    consulting_request: ConsultingRequestResponse | None = None
+    mineral_buy_request: MineralBuyerRequestResponse | None = None
+    mineral_sell_request: MineralSellerRequestResponse | None = None
+    license_sell_request: LicenseSellRequestResponse | None = None
 
+class RequestCreate(BaseModel):
+    request_type: RequestType
+    more_detail: Optional[str] = None
+
+    license_sell_request: LicenseSellRequestCreate|None = None
+    mineral_buy_request: MineralBuyerRequestCreate|None = None
+    consulting_request: ConsultingRequestCreate|None = None
+    mineral_sell_request: MineralSellerRequestCreate|None = None
+
+class RequestUpdate(BaseModel):
+    more_detail: str|None = None
+
+    license_sell_request: LicenseSellRequestUpdate|None = None
+    mineral_buy_request: MineralBuyerRequestUpdate|None = None
+    consulting_request: ConsultingRequestUpdate|None = None
+    mineral_sell_request: MineralSellerRequestUpdate|None = None

@@ -100,7 +100,6 @@ class LicenseHolderProfileResponse(ProfileBaseResponse):
     geological_report_document_id: Optional[UUID] = None
     national_id_document_id: Optional[UUID] = None
 
-    user: auth_models.User
 
 
 class EquipmentOwnerProfileResponse(ProfileBaseResponse):
@@ -109,7 +108,6 @@ class EquipmentOwnerProfileResponse(ProfileBaseResponse):
     trade_license_document_id: Optional[UUID] = None
     national_id_document_id: Optional[UUID] = None
 
-    user: auth_models.User
 
 
 class ConsultantProfileResponse(ProfileBaseResponse):
@@ -120,7 +118,6 @@ class ConsultantProfileResponse(ProfileBaseResponse):
     professional_license_document_id: Optional[UUID] = None
     supporting_document_id: Optional[UUID] = None
 
-    user: auth_models.User
 
 
 class BuyerProfileResponse(ProfileBaseResponse):
@@ -128,8 +125,6 @@ class BuyerProfileResponse(ProfileBaseResponse):
     plant_location: str
 
     supporting_document_id: Optional[UUID] = None
-
-    user: auth_models.User
 
 
 class UserAndProfileResponse(UserResponse):

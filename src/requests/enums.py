@@ -1,5 +1,11 @@
 import enum
 
+class RequestSortOptions(str, enum.Enum):
+    latest_first = "lf"
+    oldest_first = "of"
+    pending_first = "pf"
+
+
 class RequestType(str, enum.Enum):
     CONSULTING = "CONSULTING"
     MINERAL_BUYER = "MINERAL_BUYER"
@@ -46,3 +52,5 @@ class StudyLevel(str, enum.Enum):
     EXPLORATION = "EXPLORATION"
     MINING = "MINING"
     UNSPECIFIED = "UNSPECIFIED"
+
+

@@ -32,7 +32,7 @@ class Request(SQLModel, table=True):
 
     is_deleted: bool = False
 
-    user: auth_models.User = Relationship(back_populates="requests")
+    user: auth_models.User = Relationship()
 
 class ConsultingRequest(SQLModel, table=True):
     __tablename__ = "consulting_requests"

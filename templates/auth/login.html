@@ -38,7 +38,7 @@
             <form
               hx-post="{{url_for('login_post')}}"
               hx-target="#result"
-              hx-swap="outerHTML"
+              hx-swap="innerHTML"
             >
               <div class="mb-3">
                 <label for="emailAddress" class="form-label fw-semibold"
@@ -85,6 +85,8 @@
 
               <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
                 Login
+                <span id="loading-spinner" class="htmx-indicator spinner-border spinner-border-sm me-2" role="status"></span>
+
               </button>
               <div class="mt-4">
                 <hr />
