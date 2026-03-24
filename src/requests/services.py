@@ -1,5 +1,3 @@
-from pydantic import BaseModel
-
 from uuid import UUID
 
 from sqlalchemy import Select
@@ -11,15 +9,9 @@ from .exceptions import StaffNotAllowed, RequestNotFoundError, RequestNotAllowed
     RequestInfoNotFound, RequestTypeNotAllowed, RequestCanNotBeUpdated
 from .schemas import RequestFilters, RequestDetailResponse, RequestCreate, ConsultingRequestResponse, \
     LicenseSellRequestResponse, MineralBuyerRequestResponse, MineralSellerRequestResponse, RequestUpdate, \
-    RequestResponse
+    RequestResponse, UserStatsResponse
 from .models import Request, MineralSellerRequest, ConsultingRequest, LicenseSellRequest, MineralBuyerRequest
 from . import config
-
-class UserStatsResponse(BaseModel):
-    user_id: UUID
-    total_requests: int | None = 0
-    pending_requests: int | None = 0
-    completed_requests: int | None = 0
 
 request_type_to_request_detail_attribute_name = {
     RequestType.CONSULTING: "consulting_request",
@@ -62,7 +54,7 @@ def _get_request_detail_response_model(request_type: RequestType)-> type:
 
 
 def create_request(session: Session, data: RequestCreate, actor: auth_models.User) -> RequestDetailResponse:
-    if actor.role not in config.ALLOWED_REQUESTS_TO_ROLES[RequestType.LICENSE_SELL]:
+    if data.request_type not in config.ALLOWED_REQUEST_TYPES_TO_ROLES[actor.role]:
         raise RequestTypeNotAllowed()
 
     request = Request(

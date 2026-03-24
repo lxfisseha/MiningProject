@@ -208,3 +208,10 @@ class RequestUpdate(BaseModel):
     mineral_buy_request: MineralBuyerRequestUpdate|None = None
     consulting_request: ConsultingRequestUpdate|None = None
     mineral_sell_request: MineralSellerRequestUpdate|None = None
+
+
+class UserStatsResponse(BaseModel):
+    user_id: UUID
+    total_requests: int | None = 0
+    pending_requests: int | None = 0
+    completed_requests: int | None = 0

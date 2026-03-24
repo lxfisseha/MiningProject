@@ -1,0 +1,24 @@
+{% extends "requests/create_request_base.html" %}
+{% block form_title %}
+Create Other Request
+{% endblock form_title %}
+{% block form_body %}
+    <form action="#" method="POST" enctype="multipart/form-data">
+        <h5 class="text-secondary border-bottom pb-2 mb-4">Request Information</h5>
+          <div class="row">
+              <div class="col-md-12 mb-2">
+                <label for="more_detail" class="form-label">Request Detail</label>
+                <textarea
+                  class="form-control"
+                  id="equipment_types_owned"
+                  name="more_detail"
+                  rows="10"
+                  required
+                ></textarea>
+              </div>
+        </div>
+        <div class="mt-5">
+            <button type="submit" class="btn btn-primary btn-lg px-5">Submit Request</button>
+        </div>
+    </form>
+{% endblock form_body %}

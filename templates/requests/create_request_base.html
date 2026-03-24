@@ -1,0 +1,27 @@
+{% extends "requests/base.html" %}
+
+{% block page_styles %}
+<style>
+        .form-label { font-weight: 600; color: #212529; }
+        .card { border: 1px solid #dee2e6; }
+        .header-bg { background-color: #343a40; color: white; border-radius: 12px 12px 0 0; }
+    </style>
+{% endblock page_styles %}
+
+{% block main %}
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm rounded-4">
+                    <div class="card-header  p-4">
+                        <h3 class="mb-0">{% block form_title %}{% endblock form_title %}</h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        {% block form_body %}{% endblock form_body %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}}
+
