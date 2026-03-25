@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Jinja2InjectionSettings">
+    <option name="enabledFiles">
+      <set>
+        <option value="$PROJECT_DIR$/src/profiles/routers.py" />
+        <option value="$PROJECT_DIR$/templates/_success_alert.html" />
+        <option value="$PROJECT_DIR$/templates/auth/auth_base.html" />
+        <option value="$PROJECT_DIR$/templates/auth/file_upload_form.html" />
+        <option value="$PROJECT_DIR$/templates/auth/login.html" />
+        <option value="$PROJECT_DIR$/templates/auth/partials/_registration_success_response.html" />
+        <option value="$PROJECT_DIR$/templates/auth/register_user.html" />
+        <option value="$PROJECT_DIR$/templates/base.html" />
+        <option value="$PROJECT_DIR$/templates/profiles/_alert_edit_profile_error.html" />
+        <option value="$PROJECT_DIR$/templates/profiles/_edit_profile_form.html" />
+        <option value="$PROJECT_DIR$/templates/profiles/_edit_user_form.html" />
+        <option value="$PROJECT_DIR$/templates/profiles/registration_profile.html" />
+        <option value="$PROJECT_DIR$/templates/requests/base.html" />
+        <option value="$PROJECT_DIR$/templates/requests/create_consulting_request_form.html" />
+        <option value="$PROJECT_DIR$/templates/requests/create_other_request_form.html" />
+        <option value="$PROJECT_DIR$/templates/requests/home.html" />
+      </set>
+    </option>
+  </component>
+</project>
