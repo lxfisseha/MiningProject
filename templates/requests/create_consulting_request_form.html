@@ -2,13 +2,13 @@
 
 {% block form_title %}Consulting Request Form{% endblock form_title %}
 {% block form_body %}
-<form hx-post="#" hx-target="#create_response" hx-swap="innerHTML" hx-indicator="#loading-spinner" enctype="multipart/form-data">
+<form hx-post="{{ url_for('create_request_post', request_type=request_types.CONSULTING.value) }}" hx-target="#create_response" hx-swap="innerHTML" hx-indicator="#loading-spinner" enctype="multipart/form-data">
                         
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="consultancy_type"  class="form-label">Consultancy Type</label>
-                                <select class="form-select" name="consultancy_type" id="consultancy_type" required>
+                                <select class="form-select" name="consulting_request.consultancy_type" id="consultancy_type" required>
                                     <option value="" selected disabled>Choose a service...</option>
                                     {% for consultancy_type in consultancy_types %}
                                     <option value="{{consultancy_type.value}}">{{consultancy_type.value}}</option>
@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="study_level" class="form-label">Study Level</label>
-                                <select class="form-select" name="study_level" id="study_level" required>
+                                <select class="form-select" name="consulting_request.study_level" id="study_level" required>
                                     <option value="" selected disabled>Select level...</option>
                                     {% for study_level in study_levels %}
                                     <option value="{{study_level.value}}">{{study_level.value}}</option>
@@ -25,11 +25,11 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="expert_type" class="form-label">Expert Type Required</label>
-                                <input type="text" class="form-control" id="expert_type" name="expert_type" placeholder="e.g. Senior Geologist" required>
+                                <input type="text" class="form-control" id="expert_type" name="consulting_request.expert_type" placeholder="e.g. Senior Geologist" required>
                             </div>
                             <div class="col-md-6 d-flex align-items-center mb-3">
                                 <div class="form-check form-switch mt-md-4">
-                                    <input name="drill_machine_required"  class="form-check-input" type="checkbox" id="drill_machine_required">
+                                    <input name="consulting_request.drill_machine_required"  class="form-check-input" type="checkbox" id="drill_machine_required">
                                     <label class="form-check-label ms-2" for="drill_machine_required">Drill Machine Required?</label>
                                 </div>
                             </div>
@@ -41,19 +41,19 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="location" class="form-label">Location (Region/Woreda)</label>
-                                <input type="text" class="form-control" name="location" id="location" placeholder="Site location" required>
+                                <input type="text" class="form-control" name="consulting_request.location" id="location" placeholder="Site location" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="material_type" class="form-label">Material Type</label>
-                                <input type="text" name="material_type" class="form-control" id="material_type" placeholder="e.g. Gold, Lithium, Coal" required>
+                                <input type="text" name="consulting_request.material_type" class="form-control" id="material_type" placeholder="e.g. Gold, Lithium, Coal" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="license_holder_name" class="form-label">License Holder Name</label>
-                                <input type="text" class="form-control" name="license_holder_name" id="license_holder_name" required>
+                                <input type="text" class="form-control" name="consulting_request.license_holder_name" id="license_holder_name" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="license_number" class="form-label">License Number</label>
-                                <input type="text" class="form-control" name="license_number" id="license_number" required>
+                                <input type="text" class="form-control" name="consulting_request.license_number" id="license_number" required>
                             </div>
                         </div>
 

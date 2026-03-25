@@ -14,7 +14,7 @@ from .dependencies import CURRENT_USER_FROM_COOKIE
 from .models import UserRole
 from .services import login_service, registration_service, change_my_password, update_user
 from .schemas import LoginRequest, UserResponse, RegisterUserRequest, ChangeMyPasswordRequest, UserUpdate
-from .utils import save_token_response_to_cookies, nest_dotted_form_data
+from .utils import save_token_response_to_cookies
 
 router = APIRouter()
 

@@ -12,7 +12,7 @@ from src.profiles.models import LicenseType
 # ===================
 class RequestFilters(BaseModel):
     offset: int = 0
-    limit: int = 10
+    limit: int = 15
     exclude_cancelled: bool = False
     request_types: list[RequestType] = []
     sorting: RequestSortOptions = RequestSortOptions.latest_first
@@ -98,7 +98,8 @@ class MineralSellerRequestBase(BaseModel):
 
 
 class MineralSellerRequestCreate(MineralSellerRequestBase):
-    pass
+    self_transportation: bool = False
+    self_production: bool = False
 
 
 class MineralSellerRequestUpdate(BaseModel):
@@ -168,7 +169,8 @@ class MineralBuyerRequestBase(BaseModel):
 
 
 class MineralBuyerRequestCreate(MineralBuyerRequestBase):
-    pass
+    self_transportation: bool = False
+    self_production: bool = False
 
 
 class MineralBuyerRequestUpdate(BaseModel):

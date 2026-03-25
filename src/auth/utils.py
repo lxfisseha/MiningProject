@@ -1,5 +1,4 @@
 from datetime import datetime, timezone, timedelta
-from typing import Annotated
 from fastapi.responses import HTMLResponse
 from pwdlib import PasswordHash
 from jwt.exceptions import InvalidTokenError
@@ -69,16 +68,3 @@ def save_token_response_to_cookies(response:HTMLResponse ,token: TokenResponse):
     )
     return response
 
-def nest_dotted_form_data(form: dict):
-    nested = {}
-
-    for key, value in form.items():
-        keys = key.split(".")
-        current = nested
-
-        for k in keys[:-1]:
-            current = current.setdefault(k, {})
-
-        current[keys[-1]] = value
-
-    return nested

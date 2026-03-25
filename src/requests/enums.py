@@ -3,7 +3,6 @@ import enum
 class RequestSortOptions(str, enum.Enum):
     latest_first = "lf"
     oldest_first = "of"
-    pending_first = "pf"
 
 
 class RequestType(str, enum.Enum):

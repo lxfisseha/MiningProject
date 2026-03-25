@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import Select
+from sqlalchemy import Select, case, desc
 from sqlmodel import Session, select, case, func
 
 from src.auth import models as auth_models
@@ -67,15 +67,19 @@ def create_request(session: Session, data: RequestCreate, actor: auth_models.Use
     session.flush()
 
     if request.request_type == RequestType.OTHER:
+        session.commit()
         return RequestDetailResponse.model_validate(request)
 
     request_detail_model = _get_request_detail_model(data.request_type)
     request_data_attr_name = _get_request_detail_attribute_name(data.request_type)
 
+    print("we found the request detail model:", request_detail_model)
+    print("we found the request attribute model:", request_data_attr_name)
     detail_data = getattr(data, request_data_attr_name, None)
+    print("heres the detail data: ", detail_data)
     if not detail_data:
         raise RequestInfoNotFound()
-    request_detail = request_detail_model.model_validate(data, update={"request_id": request.id})
+    request_detail = request_detail_model.model_validate(detail_data, update={"request_id": request.id})
 
     session.add(request_detail)
     session.commit()
@@ -162,14 +166,19 @@ def get_my_requests(session: Session, actor: auth_models.User, filters: RequestF
     if filters.exclude_cancelled:
         statement.where(Request.status != RequestStatus.CANCELLED)
 
-    statement = sort_requests_statement(filters.sorting, statement)
+    statement = _sort_requests_statement(filters.sorting, statement)
 
     statement = statement.limit(filters.limit).offset(filters.offset)
 
     return session.exec(statement).all()
 
-def sort_requests_statement(sort_option: RequestSortOptions, requests_statement: Select):
-    return requests_statement
+def _sort_requests_statement(sort_option: RequestSortOptions, requests_statement: Select):
+    if sort_option == RequestSortOptions.oldest_first:
+       new_statement = requests_statement.order_by(Request.created_at)
+    else:
+        new_statement = requests_statement.order_by(desc(Request.created_at))
+
+    return new_statement
 
 
 def get_request_with_detail(session: Session, request_id: UUID, actor: auth_models.User) -> RequestDetailResponse:

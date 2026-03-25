@@ -1,5 +1,4 @@
-
-def nest_form_data(form: dict):
+def nest_dotted_form_data(form: dict):
     nested = {}
 
     for key, value in form.items():

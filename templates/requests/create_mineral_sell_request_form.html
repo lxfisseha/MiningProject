@@ -3,20 +3,20 @@
 Create Mineral Sell Offer
 {% endblock form_title %} 
 {% block form_body %}
-    <form action="#" method="POST" enctype="multipart/form-data">
+    <form hx-post="{{ url_for('create_request_post', request_type=request_types.MINERAL_SELLER.value) }}" hx-target="#create_response" hx-swap="innerHTML" hx-indicator="#loading-spinner" enctype="multipart/form-data">
         <h5 class="text-secondary border-bottom pb-2 mb-4">Mineral & Supply Information</h5>
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="material_type" class="form-label">Material Type</label>
-                <input type="text" class="form-control" name="material_type" placeholder="e.g. Tantalum" required>
+                <input type="text" class="form-control" name="mineral_sell_request.material_type" placeholder="e.g. Tantalum" required>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="quantity" class="form-label">Available Quantity</label>
-                <input type="text" class="form-control" name="quantity" placeholder="e.g. 500 Tons" required>
+                <input type="text" class="form-control" name="mineral_sell_request.quantity" placeholder="e.g. 500 Tons" required>
             </div>
             <div class="col-md-12 mb-3">
                 <label for="location" class="form-label">Current Storage Location</label>
-                <input type="text" class="form-control" name="location" required>
+                <input type="text" class="form-control" name="mineral_sell_request.location" required>
             </div>
         </div>
 
@@ -26,11 +26,11 @@ Create Mineral Sell Offer
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="license_holder_name" class="form-label">License Holder Name</label>
-                <input type="text" class="form-control" name="license_holder_name" required>
+                <input type="text" class="form-control" name="mineral_sell_request.license_holder_name" required>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="license_number" class="form-label">License Number</label>
-                <input type="text" class="form-control" name="license_number" required>
+                <input type="text" class="form-control" name="mineral_sell_request.license_number" required>
             </div>
         </div>
 
@@ -40,7 +40,7 @@ Create Mineral Sell Offer
         <div class="row">
             <div class="col-md-6 mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="self_transportation">
+                    <input class="form-check-input" type="checkbox" name="mineral_sell_request.self_transportation">
                     <label class="form-check-label fw-semibold" for="self_transportation">
                         I can provide transportation
                     </label>
@@ -48,7 +48,7 @@ Create Mineral Sell Offer
             </div>
             <div class="col-md-6 mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="self_production">
+                    <input class="form-check-input" type="checkbox" name="mineral_sell_request.self_production">
                     <label class="form-check-label fw-semibold" for="self_production">
                         Material is self-produced
                     </label>
@@ -63,9 +63,10 @@ Create Mineral Sell Offer
             <input type="file" class="form-control" id="license_certificate_document" required>
         </div>
 
-    <div class="mt-5">
-        <button type="submit" class="btn btn-primary btn-lg px-5">Submit Request</button>
-    </div>
+        <div id="create_response"></div>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-5"><span id="loading-spinner" class="htmx-indicator spinner-border spinner-border-sm me-2" role="status"></span>Submit Request</button>
+        </div>
     </form>
 {% endblock form_body %}
                     

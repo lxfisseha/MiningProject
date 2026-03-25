@@ -13,7 +13,7 @@ from .exceptions import InvalidRoleError
 from .models import LicenseType
 from .schemas import ProfileRegistrationRequest, UserAndProfileUpdate, ProfileUpdateRequest
 from .services import create_user_profile, get_user_with_profile, update_profile
-from .utils import nest_form_data
+from src.utils import nest_dotted_form_data
 from src.auth.dependencies import CURRENT_USER_FROM_COOKIE
 from ..requests.services import get_user_request_stats
 
@@ -48,7 +48,7 @@ def register_incomplete_profile(request: Request, user_id: UUID, session:SESSION
 @router.post("/register/{user_id}")
 async def register_profile_post(request: Request, user_id: UUID, session: SESSION_DEP):
     form_data = await request.form()
-    data = nest_form_data(dict(form_data))
+    data = nest_dotted_form_data(dict(form_data))
 
     profile = create_user_profile(ProfileRegistrationRequest(**data), session, user_id)
     return templates.TemplateResponse(
@@ -101,7 +101,7 @@ async def my_profile(
 @router.patch("/me")
 async def edit_profile(request:Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP):
     form_data = await request.form()
-    data = ProfileUpdateRequest(**nest_form_data(dict(form_data)))
+    data = ProfileUpdateRequest(**nest_dotted_form_data(dict(form_data)))
     update_profile(current_user, current_user.id, data, session)
     return templates.TemplateResponse("_success_alert.html", context={"request": request, "msg": "profile info edited successfully."})
 

@@ -6,11 +6,11 @@ from src.database import SESSION_DEP
 from src.auth.dependencies import CURRENT_USER_FROM_COOKIE
 from . import config
 
-from .schemas import RequestFilters
-from .services import get_my_requests, get_user_request_stats
+from .schemas import RequestFilters, RequestCreate
+from .services import get_my_requests, get_user_request_stats, create_request
 from .enums import RequestStatus, RequestType, ConsultancyType, StudyLevel
-
-
+from src.profiles.models import LicenseType
+from src.utils import nest_dotted_form_data
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -37,12 +37,12 @@ async def home_page(
             "requests": get_my_requests(
                 session,
                 current_user,
-                RequestFilters(limit=10, offset=0),
+                RequestFilters(limit=15, offset=0),
             ),
             "user_stats": get_user_request_stats(current_user, current_user.id, session),
             "request_status": RequestStatus,
             "allowed_requests_to_roles": config.ALLOWED_REQUEST_TYPES_TO_ROLES,
-            "request_types":  RequestType
+            "request_types":  RequestType,
         },
     )
 
@@ -56,8 +56,27 @@ def create_request_form(request: Request, request_type: RequestType, current_use
         context={"request": request,
                  "current_user": current_user,
                  "consultancy_types": ConsultancyType,
-                 "study_levels": StudyLevel
+                 "study_levels": StudyLevel,
+                 "license_types": LicenseType,
+                 "request_types": RequestType,
                  })
+
+
+@router.post("/create_request/{request_type}")
+async def create_request_post(request: Request, request_type: RequestType,  current_user: CURRENT_USER_FROM_COOKIE,
+                                             session: SESSION_DEP):
+    form_data = await request.form()
+    data = RequestCreate(request_type=request_type, **nest_dotted_form_data(dict(form_data)))
+    create_request(session,data , current_user)
+
+    return templates.TemplateResponse(
+        "requests/_request_created_alert.html",
+        context={
+            "request": request,
+            "msg": "Request created successfully!"
+        }
+    )
+
 
 @router.get("/request_detail/{request_id}")
 def request_detail(request_id: UUID):
