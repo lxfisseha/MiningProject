@@ -1,0 +1,51 @@
+<div class="card shadow-sm ">
+    <div class="card-header bg-white py-3">
+        <h6 class="mb-0 fw-bold">Consulting Request Details</h6>
+    </div>
+    <div class="card-body">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label class="small text-muted mb-1 text-capitalize d-block">Consultancy Type</label>
+                <p class="fw-medium">{{request_info.consulting_request.consultancy_type.value}}</p>
+            </div>
+            <div class="col-md-6">
+                <label class="small text-muted mb-1 text-capitalize d-block">Expert Type</label>
+                <p class="fw-medium">{{request_info.consulting_request.expert_type}}</p>
+            </div>
+            <div class="col-md-6">
+                <label class="small text-muted mb-1 text-capitalize d-block">Drill Machine Required</label>
+                <p class="badge bg-success">{{request_info.consulting_request.drill_machine_required and "Yes" or "No"}}</p>
+            </div>
+            <div class="col-md-6">
+                <label class="small text-muted mb-1 text-capitalize d-block">Study Level</label>
+                <p class="fw-medium">{{request_info.consulting_request.study_level.value}}</p>
+            </div>
+            <div class="col-md-6">
+                <label class="small text-muted mb-1 text-capitalize d-block">Location</label>
+                <p class="fw-medium">{{request_info.consulting_request.location}}</p>
+            </div>
+            <div class="col-md-6">
+                <label class="small text-muted mb-1 text-capitalize d-block">Material Type</label>
+                <p class="fw-medium">{{request_info.consulting_request.material_type}}</p>
+            </div>
+            <div class="col-md-6 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">License Holder Name</label>
+                <p class="fw-medium">{{request_info.consulting_request.license_holder_name}}</p>
+            </div>
+            <div class="col-md-6 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">License Number</label>
+                <p class="fw-medium">{{request_info.consulting_request.license_number}}</p>
+            </div>
+            <div class="col-12 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">License Certificate Document ID</label>
+                <div class="d-flex align-items-center mt-1">
+                    <i class="bi bi-file-earmark-pdf text-danger me-2 fs-4"></i>
+                    <span class="fw-medium">DOC-CERT-7721-X.pdf</span>
+                    <a href="/download/123454657689" class="btn btn-sm btn-outline-primary ms-auto">
+                        <i class="bi bi-download"></i> Download
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

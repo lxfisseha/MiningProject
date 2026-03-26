@@ -1,0 +1,51 @@
+{%extends 'requests/_edit_request_modal_base.html'%}
+{%block form_fields%}
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Material Type</label>
+            <input type="text" name="mineral_sell_request.material_type" class="form-control" value="{{ request_info.mineral_sell_request.material_type }}">
+        </div>
+
+    <div class="col-md-6">
+        <label class="small text-muted text-capitalize d-block mb-1">Location</label>
+        <input type="text" name="mineral_sell_request.location" class="form-control" value="{{ request_info.mineral_sell_request.location }}">
+    </div>
+
+    <div class="col-md-6 border-top pt-3">
+        <label class="small text-muted text-capitalize d-block mb-1">Quantity</label>
+        <input type="text" name="mineral_sell_request.quantity" class="form-control" value="{{ request_info.mineral_sell_request.quantity }}">
+    </div>
+
+    <div class="col-md-6 border-top pt-3">
+        <label class="small text-muted text-capitalize d-block mb-1">License Holder Name</label>
+        <input type="text" name="mineral_sell_request.license_holder_name" class="form-control" value="{{ request_info.mineral_sell_request.license_holder_name }}">
+    </div>
+
+    <div class="col-md-6 border-top pt-3">
+        <label class="small text-muted text-capitalize d-block mb-1">License Number</label>
+        <input type="text" name="mineral_sell_request.license_number" class="form-control" value="{{ request_info.mineral_sell_request.license_number }}">
+    </div>
+
+    <div class="col-md-6 border-top pt-3">
+        <label class="small text-muted text-capitalize d-block mb-1">Self Transportation</label>
+        <div class="form-check form-switch mt-2">
+            <input class="form-check-input" type="checkbox" name="mineral_sell_request.self_transportation" id="self_transportation" {% if request_info.mineral_sell_request.self_transportation %}checked{% endif %}>
+            <label class="form-check-label text-muted small" for="self_transportation">Provider handles logistics</label>
+        </div>
+    </div>
+
+    <div class="col-md-6 border-top pt-3">
+        <label class="small text-muted text-capitalize d-block mb-1">Self Production</label>
+        <div class="form-check form-switch mt-2">
+            <input class="form-check-input" type="checkbox" name="mineral_sell_request.self_production" id="self_production" {% if request_info.mineral_sell_request.self_production %}checked{% endif %}>
+            <label class="form-check-label text-muted small" for="self_production">Directly produced by seller</label>
+        </div>
+    </div>
+
+    <div class="col-12 border-top pt-3">
+        <label class="small text-muted text-capitalize d-block mb-1">Update License Certificate</label>
+        <input type="file" name="mineral_sell_request.license_certificate_document" class="form-control">
+        <div class="form-text small text-muted">Current Document ID: {{ request_info.mineral_sell_request.license_certificate_document_id }}</div>
+    </div>
+    </div>
+{%endblock form_fields%}

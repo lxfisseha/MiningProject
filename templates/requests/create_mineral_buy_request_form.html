@@ -1,11 +1,10 @@
 {% extends "requests/create_request_base.html" %}
 
-{%block form_title%}% Mineral Acquisition Request{%{% endblock form_title %}%}
+{%block form_title%} Mineral Acquisition Request{% endblock form_title %}
 
 {% block form_body %}
     <form hx-post="{{ url_for('create_request_post', request_type=request_types.MINERAL_BUYER.value) }}" hx-target="#create_response" hx-swap="innerHTML" hx-indicator="#loading-spinner">
         
-        <div class="section-header mb-3">Requirement Specifications</div>
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="material_type" class="form-label">Desired Material</label>

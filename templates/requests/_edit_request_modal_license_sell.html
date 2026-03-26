@@ -1,0 +1,50 @@
+{%extends 'requests/_edit_request_modal_base.html'%}
+{%block form_fields%}
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="small text-muted text-capitalize d-block mb-1">License Type</label>
+                            <select name="license_sell_request.license_type" class="form-select">
+                                {% for license_type in license_types %}
+                                    <option {% if request_info.license_sell_request.license_type == license_type %}selected{% endif %} value="{{license_type.value}}">{{license_type.value}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    <div class="col-md-6">
+                        <label class="small text-muted text-capitalize d-block mb-1">Location</label>
+                        <input type="text" name="license_sell_request.location" class="form-control" value="{{ request_info.license_sell_request.location }}">
+                    </div>
+
+                    <div class="col-md-6 border-top pt-3">
+                        <label class="small text-muted text-capitalize d-block mb-1">Material Type</label>
+                        <input type="text" name="license_sell_request.material_type" class="form-control" value="{{ request_info.license_sell_request.material_type }}">
+                    </div>
+
+                    <div class="col-md-6 border-top pt-3">
+                        <label class="small text-muted text-capitalize d-block mb-1">Site Area</label>
+                        <input type="text" name="license_sell_request.site_area" class="form-control" value="{{ request_info.license_sell_request.site_area }}">
+                    </div>
+
+                    <div class="col-md-6 border-top pt-3">
+                        <label class="small text-muted text-capitalize d-block mb-1">License Holder Name</label>
+                        <input type="text" name="license_sell_request.license_holder_name" class="form-control" value="{{ request_info.license_sell_request.license_holder_name }}">
+                    </div>
+
+                    <div class="col-md-6 border-top pt-3">
+                        <label class="small text-muted text-capitalize d-block mb-1">License Number</label>
+                        <input type="text" name="license_sell_request.license_number" class="form-control" value="{{ request_info.license_sell_request.license_number }}">
+                    </div>
+
+                    <div class="col-12 border-top pt-3">
+                        <label class="small text-muted text-capitalize d-block mb-1">Update License Certificate</label>
+                        <input type="file" name="license_sell_request.license_certificate_document" class="form-control">
+                        <div class="form-text small text-muted">Current Document ID: {{ request_info.license_sell_request.license_certificate_document_id or 'None' }}</div>
+                    </div>
+
+                    <div class="col-12 border-top pt-3">
+                        <label class="small text-muted text-capitalize d-block mb-1">Update Geological Report</label>
+                        <input type="file" name="license_sell_request.geological_report_document" class="form-control">
+                        <div class="form-text small text-muted">Current Document ID: {{ request_info.license_sell_request.geological_report_document_id or 'None' }}</div>
+                    </div>
+                </div>
+{%endblock form_fields%}

@@ -1,0 +1,51 @@
+{%extends 'requests/_edit_request_modal_base.html'%}
+{%block form_fields%}
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Material Type</label>
+            <input type="text" name="mineral_buy_request.material_type" class="form-control" value="{{ request_info.mineral_buy_request.material_type }}">
+        </div>
+
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Location</label>
+            <input type="text" name="mineral_buy_request.location" class="form-control" value="{{ request_info.mineral_buy_request.location }}">
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">Quantity</label>
+            <input type="text" name="mineral_buy_request.quantity" class="form-control" value="{{ request_info.mineral_buy_request.quantity }}">
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">Buyer Name</label>
+            <input type="text" name="mineral_buy_request.buyer_name" class="form-control" value="{{ request_info.mineral_buy_request.buyer_name }}">
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">Contact Information</label>
+            <input type="text" name="mineral_buy_request.contact_information" class="form-control" value="{{ request_info.mineral_buy_request.contact_information }}">
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">Self Transportation</label>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" name="mineral_buy_request.self_transportation" id="self_transportation" {% if request_info.mineral_buy_request.self_transportation %}checked{% endif %}>
+                <label class="form-check-label text-muted small" for="self_transportation">Buyer manages transportation</label>
+            </div>
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">Self Production</label>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" name="mineral_buy_request.self_production" id="self_production" {% if request_info.mineral_buy_request.self_production %}checked{% endif %}>
+                <label class="form-check-label text-muted small" for="self_production">Involves self-production capacity</label>
+            </div>
+        </div>
+
+        <div class="col-12 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">Collaboration Interest</label>
+            <textarea name="mineral_buy_request.collaboration_interest" class="form-control" rows="4">{{ request_info.mineral_buy_request.collaboration_interest }}</textarea>
+            <div class="form-text small text-muted">Describe the nature of the partnership or specific interests.</div>
+        </div>
+    </div>
+{%endblock form_fields%}

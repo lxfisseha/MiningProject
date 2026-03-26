@@ -2,7 +2,14 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime, timezone
 from pydantic import BaseModel, ConfigDict
-from .enums import RequestType, RequestStatus, ConsultancyType, StudyLevel, RequestSortOptions
+from src.auth.schemas import UserResponse
+from .enums import (
+    RequestType,
+    RequestStatus,
+    ConsultancyType,
+    StudyLevel,
+    RequestSortOptions,
+)
 
 from src.profiles.models import LicenseType
 
@@ -41,13 +48,16 @@ class OtherRequestResponse(RequestBase):
 class RequestResponse(RequestBase):
     model_config = ConfigDict(from_attributes=True)
 
+    user: UserResponse | None = None
     id: UUID
     created_at: datetime
     updated_at: datetime
 
+
 # =========================
 # ConsultingRequest Schemas
 # =========================
+
 
 class ConsultingRequestBase(BaseModel):
     consultancy_type: ConsultancyType
@@ -86,6 +96,7 @@ class ConsultingRequestResponse(ConsultingRequestBase):
 # MineralSellerRequest Schemas
 # =========================
 
+
 class MineralSellerRequestBase(BaseModel):
     material_type: str
     location: str
@@ -122,6 +133,7 @@ class MineralSellerRequestResponse(MineralSellerRequestBase):
 # LicenseSellRequest Schemas
 # =========================
 
+
 class LicenseSellRequestBase(BaseModel):
     license_type: LicenseType
     location: str
@@ -157,6 +169,7 @@ class LicenseSellRequestResponse(LicenseSellRequestBase):
 # MineralBuyerRequest Schemas
 # =========================
 
+
 class MineralBuyerRequestBase(BaseModel):
     material_type: str
     location: str
@@ -188,28 +201,31 @@ class MineralBuyerRequestResponse(MineralBuyerRequestBase):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
 
+
 class RequestDetailResponse(RequestResponse):
     consulting_request: ConsultingRequestResponse | None = None
     mineral_buy_request: MineralBuyerRequestResponse | None = None
     mineral_sell_request: MineralSellerRequestResponse | None = None
     license_sell_request: LicenseSellRequestResponse | None = None
 
+
 class RequestCreate(BaseModel):
     request_type: RequestType
     more_detail: Optional[str] = None
 
-    license_sell_request: LicenseSellRequestCreate|None = None
-    mineral_buy_request: MineralBuyerRequestCreate|None = None
-    consulting_request: ConsultingRequestCreate|None = None
-    mineral_sell_request: MineralSellerRequestCreate|None = None
+    license_sell_request: LicenseSellRequestCreate | None = None
+    mineral_buy_request: MineralBuyerRequestCreate | None = None
+    consulting_request: ConsultingRequestCreate | None = None
+    mineral_sell_request: MineralSellerRequestCreate | None = None
+
 
 class RequestUpdate(BaseModel):
-    more_detail: str|None = None
+    more_detail: str | None = None
 
-    license_sell_request: LicenseSellRequestUpdate|None = None
-    mineral_buy_request: MineralBuyerRequestUpdate|None = None
-    consulting_request: ConsultingRequestUpdate|None = None
-    mineral_sell_request: MineralSellerRequestUpdate|None = None
+    license_sell_request: LicenseSellRequestUpdate | None = None
+    mineral_buy_request: MineralBuyerRequestUpdate | None = None
+    consulting_request: ConsultingRequestUpdate | None = None
+    mineral_sell_request: MineralSellerRequestUpdate | None = None
 
 
 class UserStatsResponse(BaseModel):

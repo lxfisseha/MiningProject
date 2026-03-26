@@ -1,0 +1,18 @@
+{%extends 'requests/_edit_request_modal_base.html'%}
+{%block form_fields%}
+    <div class="row">
+        <div class="col-12">
+            <label for="requestDetail" class="small text-muted mb-1 text-capitalize d-block">Request Detail</label>
+            <textarea
+            name="more_detail"
+            id="requestDetail"
+            class="form-control mb-2"
+            rows="6"
+            placeholder="Enter request details..."
+            >{{ request_info.more_detail }}</textarea>
+            <div class="form-text small text-muted">
+                Provide as much detail as possible to ensure accurate processing of this request.
+            </div>
+        </div>
+    </div>
+{%endblock form_fields%}

@@ -1,0 +1,57 @@
+<div class="card shadow-sm">
+<div class="card-header bg-white py-3">
+<h6 class="mb-0 fw-bold">License Sell Request Details</h6>
+</div>
+<div class="card-body">
+<div class="row g-4">
+<div class="col-md-6">
+<label class="small text-muted mb-1 text-capitalize d-block">License Type</label>
+<p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.license_type.value }}</p>
+</div>
+<div class="col-md-6">
+<label class="small text-muted mb-1 text-capitalize d-block">Location</label>
+<p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.location }}</p>
+</div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Material Type</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.material_type }}</p>
+        </div>
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Site Area</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.site_area }}</p>
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">License Holder Name</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.license_holder_name }}</p>
+        </div>
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">License Number</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.license_number }}</p>
+        </div>
+
+        <div class="col-12 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">License Certificate Document</label>
+            <div class="d-flex align-items-center mt-1">
+                <i class="bi bi-file-earmark-pdf text-danger me-2 fs-4"></i>
+                <span class="fw-medium text-truncate me-3">License_Certificate_143.pdf</span>
+                <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
+                    <i class="bi bi-download"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <div class="col-12 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Geological Report Document</label>
+            <div class="d-flex align-items-center mt-1">
+                <i class="bi bi-file-earmark-text text-primary me-2 fs-4"></i>
+                <span class="fw-medium text-truncate me-3">Geological_Report_12345.pdf</span>
+                <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
+                    <i class="bi bi-download"></i> Download
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

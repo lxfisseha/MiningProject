@@ -1,0 +1,52 @@
+<div class="card shadow-sm">
+<div class="card-header bg-white py-3">
+<h6 class="mb-0 fw-bold">Mineral Buyer Request Details</h6>
+</div>
+<div class="card-body">
+<div class="row g-4">
+<div class="col-md-6">
+<label class="small text-muted mb-1 text-capitalize d-block">Material Type</label>
+<p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.material_type }}</p>
+</div>
+<div class="col-md-6">
+<label class="small text-muted mb-1 text-capitalize d-block">Location</label>
+<p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.location }}</p>
+</div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Quantity</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.quantity }}</p>
+        </div>
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Buyer Name</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.buyer_name }}</p>
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Contact Information</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.contact_information }}</p>
+        </div>
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Self Transportation</label>
+            {% if request_info.mineral_buy_request.self_transportation %}
+                <span class="badge bg-success">Yes</span>
+            {% else %}
+                <span class="badge bg-secondary">No</span>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Self Production</label>
+            {% if request_info.mineral_buy_request.self_production %}
+                <span class="badge bg-success">Yes</span>
+            {% else %}
+                <span class="badge bg-secondary">No</span>
+            {% endif %}
+        </div>
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted mb-1 text-capitalize d-block">Collaboration Interest</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.collaboration_interest }}</p>
+        </div>
+    </div>
+</div>
+</div>

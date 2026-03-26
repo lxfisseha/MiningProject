@@ -1,0 +1,61 @@
+{%extends 'requests/_edit_request_modal_base.html'%}
+{%block form_fields%} 
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Consultancy Type</label>
+            <select name="consulting_request.consultancy_type" class="form-select">
+                {% for consultancy_type in consultancy_types %}
+                    <option {% if request_info.consulting_request.consultancy_type == consultancy_type %}selected{% endif %} value="{{consultancy_type.value}}">{{consultancy_type.value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Expert Type</label>
+            <input type="text" name="consulting_request.expert_type" class="form-control" value="{{ request_info.consulting_request.expert_type }}">
+        </div>
+
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Drill Machine Required</label>
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" name="consulting_request.drill_machine_required" id="drill_machine_required" {% if request_info.consulting_request.drill_machine_required %}checked{% endif %}>
+                <label class="form-check-label text-muted small" for="drill_machine_required">Check if drilling equipment is needed</label>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Study Level</label>
+            <select name="consulting_request.study_level" class="form-select">
+                {% for study_level in study_levels %}
+                    <option {% if request_info.consulting_request.study_level == study_level %}selected{% endif %} value="{{study_level.value}}">{{study_level.value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Location</label>
+            <input type="text" name="consulting_request.location" class="form-control" value="{{ request_info.consulting_request.location }}">
+        </div>
+
+        <div class="col-md-6">
+            <label class="small text-muted text-capitalize d-block mb-1">Material Type</label>
+            <input type="text" name="consulting_request.material_type" class="form-control" value="{{ request_info.consulting_request.material_type }}">
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">License Holder Name</label>
+            <input type="text" name="consulting_request.license_holder_name" class="form-control" value="{{ request_info.consulting_request.license_holder_name }}">
+        </div>
+
+        <div class="col-md-6 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">License Number</label>
+            <input type="text" name="consulting_request.license_number" class="form-control" value="{{ request_info.consulting_request.license_number }}">
+        </div>
+
+        <div class="col-12 border-top pt-3">
+            <label class="small text-muted text-capitalize d-block mb-1">Update License Certificate</label>
+            <input type="file" name="consulting_request.license_certificate_document" class="form-control">
+            <div class="form-text small">Current ID: {{ request_info.consulting_request.license_certificate_document_id }}</div>
+        </div>
+    </div>
+{%endblock form_fields%}
