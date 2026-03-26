@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Query, Depends
 from fastapi.templating import Jinja2Templates
 from uuid import UUID
+from typing import Annotated
 
 from src.database import SESSION_DEP
 from src.auth.dependencies import CURRENT_USER_FROM_COOKIE
 from . import config
+import time
+
 
 from .schemas import RequestFilters, RequestCreate, RequestUpdate
 from .services import (
@@ -133,13 +136,43 @@ def request_detail(
 
 
 @router.get("/myrequests")
-def my_requests(request: Request, current_user: CURRENT_USER_FROM_COOKIE):
+def my_requests(
+    request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP
+):
     return templates.TemplateResponse(
         "requests/my_requests.html",
         {
             "request": request,
             "current_user": current_user,
             "request_types": RequestType,
+            "user_stats": get_user_request_stats(
+                current_user, current_user.id, session
+            ),
+            "allowed_requests_to_roles": config.ALLOWED_REQUEST_TYPES_TO_ROLES,
+        },
+    )
+
+
+@router.get("/requests_table")
+async def requests_table(
+    request: Request,
+    session: SESSION_DEP,
+    current_user: CURRENT_USER_FROM_COOKIE,
+    filters: RequestFilters = Depends(),
+):
+
+    time.sleep(0.5)
+    requests = get_my_requests(session, current_user, filters)
+
+    return templates.TemplateResponse(
+        "requests/_requests_table.html",
+        {
+            "request": request,
+            "requests": requests,
+            "current_user": current_user,
+            "request_types": RequestType,
+            "request_status": RequestStatus,
+            "filters": filters,
         },
     )
 

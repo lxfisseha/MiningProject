@@ -220,10 +220,10 @@ def get_my_requests(
         .where(Request.requester_id == actor.id)
     )
 
-    if filters.request_types:
-        statement.where(Request.request_type.in_(filters.request_types))
+    if filters.request_type:
+        statement = statement.where(Request.request_type == filters.request_type)
     if filters.exclude_cancelled:
-        statement.where(Request.status != RequestStatus.CANCELLED)
+        statement = statement.where(Request.status != RequestStatus.CANCELLED)
 
     statement = _sort_requests_statement(filters.sorting, statement)
 

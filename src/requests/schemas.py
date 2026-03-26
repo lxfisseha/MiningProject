@@ -1,7 +1,8 @@
 from typing import Optional
 from uuid import UUID
 from datetime import datetime, timezone
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, validator
+from .exceptions import RequestErrorBase
 from src.auth.schemas import UserResponse
 from .enums import (
     RequestType,
@@ -19,10 +20,22 @@ from src.profiles.models import LicenseType
 # ===================
 class RequestFilters(BaseModel):
     offset: int = 0
-    limit: int = 15
+    limit: int = 10
     exclude_cancelled: bool = False
-    request_types: list[RequestType] = []
+    request_type: RequestType | None | str = None
     sorting: RequestSortOptions = RequestSortOptions.latest_first
+
+    @validator("request_type", pre=True)
+    def empty_str_to_none(cls, v):
+        if v == "" or v == None:
+            return None
+        elif v not in list(RequestType):
+            raise RequestErrorBase(422, "Invalid request type")
+        return v
+
+    @property
+    def current_page(self):
+        return self.offset // self.limit + 1
 
 
 class RequestBase(BaseModel):

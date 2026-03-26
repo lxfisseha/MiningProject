@@ -19,9 +19,7 @@
             display: inline-block;
             padding: 0.5em 0;
         }
-        .search-input {
-            min-width: 280px;
-        }
+
         .filter-select {
             min-width: 160px;
         }
@@ -33,152 +31,125 @@
         .btn-view {
             font-weight: 500;
         }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            display: none; /* hidden by default */
+            justify-content: center;
+            align-items: center;
+
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+
+        /* When HTMX is loading */
+        .htmx-request#loading-indicator {
+            display: flex;
+        }
+
+        /* Blur table content when loading */
+        .htmx-request #table-content {
+            filter: blur(3px);
+            pointer-events: none;
+        }
+
     </style>
 <div class="container mt-5">
 
 <div class="d-flex justify-content-between align-items-center mb-5">
-    <h2 class="fw-bold text-dark mb-0">My Requests</h2>
+    <h4 class="fw-bold text-dark mb-0">My Requests</h4>
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle px-4 shadow-sm" type="button" id="createRequestBtn" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-plus-lg me-2"></i>Create Request
+            Create Request
         </button>
         <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="createRequestBtn">
-            <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person-gear me-2"></i> Consulting Request</a></li>
-            <li><a class="dropdown-item py-2" href="#"><i class="bi bi-box-seam me-2"></i> Mineral Seller Request</a></li>
-            <li><a class="dropdown-item py-2" href="#"><i class="bi bi-cart3 me-2"></i> Mineral Buyer Request</a></li>
-            <li><a class="dropdown-item py-2" href="#"><i class="bi bi-file-earmark-check me-2"></i> License Sell Request</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item py-2" href="#"><i class="bi bi-chat-left-text me-2"></i> General Request</a></li>
+            {% for request_type in allowed_requests_to_roles[current_user.role] %}
+                <li><a class="dropdown-item py-2" href="{{ url_for('create_request_form', request_type=request_type.value)}}"> {{request_type.value}}</a></li>
+            {% endfor %}
+            
         </ul>
     </div>
 </div>
 
-<div class="d-flex flex-wrap gap-3 align-items-center justify-content-between mb-3">
-    <div class="input-group" style="max-width: 600px;">
-        <span class="input-group-text bg-white border-end-0 text-muted">
-            <i class="bi bi-search"></i>
-        </span>
-        <input type="text" class="form-control border-start-0" placeholder="Search requests...">
-    </div>
-    <div class="d-flex align-items-center gap-2">
-        <label class="small text-muted text-nowrap mb-0">Request Type:</label>  
-        <select class="form-select shadow-none" style="width: auto; border: none; background-color: transparent; font-weight: 500;">
-        <option selected>Show All Types</option>
-        <option>Consulting</option>
-        <option>Mineral Seller</option>
-        <option>Mineral Buyer</option>
-        <option>License Sell</option>
-    </select>
-    </div>
+<div class="row g-0 mb-3 align-items-center justify-content-between">
+    <div class="col-auto align-items-center">
+            <label class="small text-muted text-nowrap mb-0">Total Requests: </label>
+            <span style=" font-weight: 500;">{{user_stats.total_requests}}</span>
+            </div>
+    <div class="d-flex align-items-center col-auto">
+
+            <label class="small text-muted text-nowrap mb-0">Request Type:</label>  
+            <select 
+                id="requestTypeSelector"
+                hx-get="{{url_for('requests_table')}}"
+                hx-target="#requestsContainer"
+                hx-indicator="#loading-indicator"
+                hx-include="#sortingSelector"
+                hx-trigger="change"
+                name="request_type"
+                class="form-select shadow-none"
+                style="width: auto; border: none; background-color: transparent; font-weight: 500;"
+                >
+            <option selected value="">Show All Types</option>
+                {% for request_type in  allowed_requests_to_roles[current_user.role] %}
+                  <option value="{{request_type.value}}">{{request_type.value}}</option>
+                {% endfor %}
+        
+        </select>
+        </div>
+
+        <div class="d-flex align-items-center col-auto">
+            <label class="small text-muted text-nowrap mb-0">Sort by:</label>
+            <select  
+                id="sortingSelector"
+                name="sorting" 
+                hx-get="{{url_for('requests_table')}}"
+                hx-target="#requestsContainer"
+                hx-indicator="#loading-indicator"
+                hx-include="#requestTypeSelector"
+                hx-trigger="change" class="form-select shadow-none" style="width: auto; border: none; background-color: transparent; font-weight: 500;">
+                <option value="lf">Latest First</option>
+                <option value="of">Oldest First</option>
+            </select>
+        </div>
+  
     
 
-    <div class="d-flex align-items-center gap-2">
-        <label class="small text-muted text-nowrap mb-0">Sort by:</label>
-        <select class="form-select shadow-none" style="width: auto; border: none; background-color: transparent; font-weight: 500;">
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="status">Status</option>
-        </select>
-    </div>
 </div>
 
-<div class="card shadow-sm border-0">
+<div class="card shadow-sm border-0 ">
     <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="ps-4 py-3">Request ID</th>
-                        <th class="py-3">Request Type</th>
-                        <th class="py-3">Status</th>
-                        <th class="py-3">Created At</th>
-                        <th class="pe-4 py-3 text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="ps-4">
-                            <span class="fw-medium">#REQ-99281</span>
-                        </td>
-                        <td>Consulting</td>
-                        <td>
-                            <span class="badge bg-primary px-3 py-2 rounded-pill">NEW</span>
-                        </td>
-                        <td class="text-muted">Mar 26, 2026</td>
-                        <td class="pe-4 text-end">
-                            <button class="btn btn-sm btn-primary px-3">View Details</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-4">
-                            <span class="fw-medium">#REQ-88712</span>
-                        </td>
-                        <td>Mineral Seller</td>
-                        <td>
-                            <span class="badge bg-success px-3 py-2 rounded-pill">APPROVED</span>
-                        </td>
-                        <td class="text-muted">Mar 22, 2026</td>
-                        <td class="pe-4 text-end">
-                            <button class="btn btn-sm btn-primary px-3">View Details</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-4">
-                            <span class="fw-medium">#REQ-77401</span>
-                        </td>
-                        <td>License Sell</td>
-                        <td>
-                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">IN_PROGRESS</span>
-                        </td>
-                        <td class="text-muted">Mar 20, 2026</td>
-                        <td class="pe-4 text-end">
-                            <button class="btn btn-sm btn-primary px-3">View Details</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-4">
-                            <span class="fw-medium">#REQ-66320</span>
-                        </td>
-                        <td>Mineral Buyer</td>
-                        <td>
-                            <span class="badge bg-danger px-3 py-2 rounded-pill">REJECTED</span>
-                        </td>
-                        <td class="text-muted">Mar 18, 2026</td>
-                        <td class="pe-4 text-end">
-                            <button class="btn btn-sm btn-primary px-3">View Details</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-4">
-                            <span class="fw-medium">#REQ-55019</span>
-                        </td>
-                        <td>General Request</td>
-                        <td>
-                            <span class="badge bg-primary px-3 py-2 rounded-pill">NEW</span>
-                        </td>
-                        <td class="text-muted">Mar 15, 2026</td>
-                        <td class="pe-4 text-end">
-                            <button class="btn btn-sm btn-primary px-3">View Details</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="loading-indicator" class="loading-overlay htmx-indicator justify-content-center py-5 ">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <div class="table-responsive" id="requestsContainer" hx-get="{{url_for('requests_table')}}" hx-indicator="#loading-indicator" hx-trigger="load">
+        
         </div>
     </div>
 </div>
 
 <nav aria-label="Page navigation" class="mt-4">
     <ul class="pagination justify-content-end align-items-center">
-        <span class="small text-muted me-3">Showing 1-5 of 200</span>  
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-        </li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-        </li>
+
+        <span class="small text-muted me-3">Pages:</span>  
+
+        {% for p in range(1,user_stats.total_requests//10 + 2) %}
+            <li class="page-item">
+                <a 
+                    hx-get="{{url_for('requests_table')}}?offset={{(p-1)*10}}"
+                    hx-target="#requestsContainer"
+                    hx-indicator="#loading-indicator"
+                    hx-include="#requestTypeSelector, #sortingSelector"
+                    class="page-link" >{{p}}
+                </a>
+            </li>
+        {% endfor %}
+
     </ul>
 </nav>
 </div>
