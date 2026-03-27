@@ -1,0 +1,62 @@
+{%extends 'requests/layouts/_create_request_base.html'%}
+
+{%block form_title%}Create License Sell Request{%endblock form_title%}
+
+{% block form_content %}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="license_type" class="form-label">License Category</label>
+            <select class="form-select" name="license_sell_request.license_type" required>
+                <option value="" selected disabled>Select type...</option>
+
+                {% for license_type in license_types %}
+                  <option value="{{license_type.value}}">{{license_type.value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="material_type" class="form-label">Material Type (Primary)</label>
+            <input type="text" class="form-control" name="license_sell_request.material_type" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="location" class="form-label">Site Location (Region/Woreda)</label>
+            <input type="text" class="form-control" name="license_sell_request.location" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="site_area" class="form-label">Site Area (Hectares)</label>
+            <input type="text" class="form-control" name="license_sell_request.site_area" placeholder="e.g. 50.5">
+        </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="license_holder_name" class="form-label">Current License Holder</label>
+                <input type="text" class="form-control" name="license_sell_request.license_holder_name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="license_number" class="form-label">License Number</label>
+                <input type="text" class="form-control" name="license_sell_request.license_number" required>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <h5 class="mb-3">Technical Documents</h5>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="license_certificate_document" class="form-label">License Certificate</label>
+                <input type="file" class="form-control" name="license_sell_request.license_certificate_document" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="geological_report_document" class="form-label">Geological Report</label>
+                <input type="file" class="form-control" name="license_sell_request.geological_report_document" required>
+            </div>
+        </div>
+
+        <div id="create_response"></div>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-5"><span id="loading-spinner" class="htmx-indicator spinner-border spinner-border-sm me-2" role="status"></span>Submit Request</button>
+        </div>
+{% endblock form_content %}

@@ -1,0 +1,16 @@
+<div class="card shadow-sm rounded-4">
+    <div class="card-header  p-4">
+        <h3 class="mb-0">{%block form_title%}Create Request ({{request_type.value}}) {%endblock form_title%}</h3>
+    </div>
+    <div class="card-body p-4 p-md-5">
+        
+    <form
+        hx-post="{{ url_for('create_request_post', request_type=request_type.value) }}"
+        hx-target="#create_response"
+        hx-swap="innerHTML"
+        hx-indicator="#loading-spinner"
+        >
+            {% block form_content %}
+            {% endblock form_content %}
+    </div>
+    </div>

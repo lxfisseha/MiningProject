@@ -24,12 +24,32 @@ from src.utils import nest_dotted_form_data
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
-request_type_to_form_map = {
-    RequestType.CONSULTING: "requests/create_consulting_request_form.html",
-    RequestType.LICENSE_SELL: "requests/create_license_sell_request_form.html",
-    RequestType.MINERAL_BUYER: "requests/create_mineral_buy_request_form.html",
-    RequestType.MINERAL_SELLER: "requests/create_mineral_sell_request_form.html",
-    RequestType.OTHER: "requests/create_other_request_form.html",
+request_type_to_templates_map = {
+    RequestType.CONSULTING: {
+        "create_form": "requests/partials/_create_consulting_request_form.html",
+        "edit_form": "requests/partials/_edit_request_modal_consulting.html",
+        "info_card": "requests/partials/_request_info_card_consulting.html",
+    },
+    RequestType.LICENSE_SELL: {
+        "create_form": "requests/partials/_create_license_sell_request_form.html",
+        "edit_form": "requests/partials/_edit_request_modal_license_sell.html",
+        "info_card": "requests/partials/_request_info_card_license_sell.html",
+    },
+    RequestType.MINERAL_BUYER: {
+        "create_form": "requests/partials/_create_mineral_buy_request_form.html",
+        "edit_form": "requests/partials/_edit_request_modal_mineral_buy.html",
+        "info_card": "requests/partials/_request_info_card_mineral_buy.html",
+    },
+    RequestType.MINERAL_SELLER: {
+        "create_form": "requests/partials/_create_mineral_sell_request_form.html",
+        "edit_form": "requests/partials/_edit_request_modal_mineral_sell.html",
+        "info_card": "requests/partials/_request_info_card_mineral_sell.html",
+    },
+    RequestType.OTHER: {
+        "create_form": "requests/partials/_create_other_request_form.html",
+        "edit_form": "requests/partials/_edit_request_modal_other.html",
+        "info_card": "requests/partials/_request_info_card_other.html",
+    },
 }
 
 
@@ -63,10 +83,9 @@ async def home_page(
 def create_request_form(
     request: Request, request_type: RequestType, current_user: CURRENT_USER_FROM_COOKIE
 ):
-    form_template_path = _get_request_type_form(request_type)
 
     return templates.TemplateResponse(
-        form_template_path,
+        "requests/pages/create_request.html",
         context={
             "request": request,
             "current_user": current_user,
@@ -74,6 +93,10 @@ def create_request_form(
             "study_levels": StudyLevel,
             "license_types": LicenseType,
             "request_types": RequestType,
+            "request_type": request_type,
+            "request_form_template_name": _get_request_type_create_form_template_name(
+                request_type
+            ),
         },
     )
 
@@ -92,7 +115,7 @@ async def create_request_post(
     create_request(session, data, current_user)
 
     return templates.TemplateResponse(
-        "requests/_request_created_alert.html",
+        "_success_alert.html",
         context={"request": request, "msg": "Request created successfully!"},
     )
 
@@ -121,16 +144,23 @@ def request_detail(
     session: SESSION_DEP,
     current_user: CURRENT_USER_FROM_COOKIE,
 ):
+    request_info = get_request_with_detail(session, request_id, current_user)
     return templates.TemplateResponse(
         "requests/pages/request_detail.html",
         context={
             "request": request,
-            "request_info": get_request_with_detail(session, request_id, current_user),
+            "request_info": request_info,
             "current_user": current_user,
             "request_types": RequestType,
             "consultancy_types": ConsultancyType,
             "study_levels": StudyLevel,
             "license_types": LicenseType,
+            "info_card_template_name": _get_request_type_info_card_template_name(
+                request_info.request_type
+            ),
+            "edit_modal_template_name": _get_request_type_edit_form_template_name(
+                request_info.request_type
+            ),
         },
     )
 
@@ -165,7 +195,7 @@ async def requests_table(
     requests = get_my_requests(session, current_user, filters)
 
     return templates.TemplateResponse(
-        "requests/_requests_table.html",
+        "requests/partials/_requests_table.html",
         {
             "request": request,
             "requests": requests,
@@ -177,8 +207,37 @@ async def requests_table(
     )
 
 
-def _get_request_type_form(request_type: RequestType):
-    form_template_path = request_type_to_form_map.get(request_type)
-    if not form_template_path:
-        form_template_path = request_type_to_form_map[RequestType.OTHER]
-    return form_template_path
+def _get_request_type_create_form_template_name(request_type: RequestType):
+    templates = (
+        request_type_to_templates_map.get(request_type)
+        or request_type_to_templates_map[RequestType.OTHER]
+    )
+
+    return (
+        templates.get("create_form")
+        or request_type_to_templates_map[RequestType.OTHER]["create_form"]
+    )
+
+
+def _get_request_type_edit_form_template_name(request_type: RequestType):
+    templates = (
+        request_type_to_templates_map.get(request_type)
+        or request_type_to_templates_map[RequestType.OTHER]
+    )
+
+    return (
+        templates.get("edit_form")
+        or request_type_to_templates_map[RequestType.OTHER]["edit_form"]
+    )
+
+
+def _get_request_type_info_card_template_name(request_type: RequestType):
+    templates = (
+        request_type_to_templates_map.get(request_type)
+        or request_type_to_templates_map[RequestType.OTHER]
+    )
+
+    return (
+        templates.get("info_card")
+        or request_type_to_templates_map[RequestType.OTHER]["info_card"]
+    )

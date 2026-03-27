@@ -1,0 +1,22 @@
+{%extends 'requests/layouts/_create_request_base.html'%}
+
+{%block form_title%}Create Request{%endblock form_title%}
+
+{% block form_content %}
+  <h5 class="text-secondary border-bottom pb-2 mb-4">Request Information</h5>
+      <div class="row">
+          <div class="col-md-12 mb-2">
+            <textarea
+              class="form-control"
+              id="equipment_types_owned"
+              name="more_detail"
+              rows="10"
+              required
+            ></textarea>
+          </div>
+    </div>
+    <div id="create_response"></div>
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary btn-lg px-5"><span id="loading-spinner" class="htmx-indicator spinner-border spinner-border-sm me-2" role="status"></span>Submit Request</button>
+    </div>
+{% endblock form_content %}

@@ -1,9 +1,8 @@
-{% extends "requests/layouts/create_request_base.html" %}
-{% block form_title %}
-Create Mineral Sell Offer
-{% endblock form_title %} 
-{% block form_body %}
-    <form hx-post="{{ url_for('create_request_post', request_type=request_types.MINERAL_SELLER.value) }}" hx-target="#create_response" hx-swap="innerHTML" hx-indicator="#loading-spinner" enctype="multipart/form-data">
+{%extends 'requests/layouts/_create_request_base.html'%}
+
+{%block form_title%}Create Mineral Sell Request{%endblock form_title%}
+
+{% block form_content %}    
         <h5 class="text-secondary border-bottom pb-2 mb-4">Mineral & Supply Information</h5>
         <div class="row">
             <div class="col-md-6 mb-3">
@@ -67,6 +66,5 @@ Create Mineral Sell Offer
         <div class="mt-4">
             <button type="submit" class="btn btn-primary btn-lg px-5"><span id="loading-spinner" class="htmx-indicator spinner-border spinner-border-sm me-2" role="status"></span>Submit Request</button>
         </div>
-    </form>
-{% endblock form_body %}
-                    
+
+{% endblock form_content %}
