@@ -5,10 +5,22 @@ from typing import Annotated
 
 from .utils import hash_password, verify_password, create_access_token
 from .models import User, UserAuth, UserRole, UserStatus
-from .schemas import LoginRequest, TokenResponse, RegisterUserRequest, ChangeMyPasswordRequest, UserUpdate
+from .schemas import (
+    LoginRequest,
+    TokenResponse,
+    RegisterUserRequest,
+    ChangeMyPasswordRequest,
+    UserUpdate,
+)
 
-from .exceptions import LoginError, UserNotFoundError, EmailExistsError, FailedToCreateAuthRecord, \
-    UnApprovedUserErrorLogin, AuthenticationErrorBase
+from .exceptions import (
+    LoginError,
+    UserNotFoundError,
+    EmailExistsError,
+    FailedToCreateAuthRecord,
+    UnApprovedUserErrorLogin,
+    AuthenticationErrorBase,
+)
 from .exceptions import WrongPasswordError, NotAllowedError
 from ..profiles.exceptions import NotAllowed
 
@@ -18,6 +30,7 @@ def get_user_by_id(user_id: UUID, session: Session):
     if not user:
         raise UserNotFoundError()
     return user
+
 
 def login_service(login_data: LoginRequest, session: Session) -> TokenResponse:
     statement = select(User).where(User.email == login_data.email)
@@ -59,12 +72,14 @@ def registration_service(registration_data: RegisterUserRequest, session: Sessio
     session.refresh(new_user)
     return new_user
 
+
 def _create_user_auth_record(password: str, user_id: UUID, session: Session):
     hashed_password = hash_password(password)
     user_auth = UserAuth(user_id=user_id, hashed_password=hashed_password)
     session.add(user_auth)
 
-def update_user(actor: User, user_id: UUID, data:UserUpdate, session:Session):
+
+def update_user(actor: User, user_id: UUID, data: UserUpdate, session: Session):
     user = session.get(User, user_id)
 
     if not user:
@@ -72,11 +87,13 @@ def update_user(actor: User, user_id: UUID, data:UserUpdate, session:Session):
     if not actor:
         raise NotAllowed()
 
-    if user.id != actor.id and actor.role not in [UserRole.ADMIN, UserRole.STAFF]:
+    if user.id != actor.id and (not actor.is_staff_or_admin):
         raise NotAllowed()
 
     if data.email:
-        existing_user = session.exec(select(User).where(User.email == data.email)).first()
+        existing_user = session.exec(
+            select(User).where(User.email == data.email)
+        ).first()
         if existing_user and existing_user.id != user_id:
             raise EmailExistsError()
 
@@ -88,7 +105,9 @@ def update_user(actor: User, user_id: UUID, data:UserUpdate, session:Session):
     return updated_user
 
 
-def change_my_password(session: Session, actor: User, user_id: UUID, data: ChangeMyPasswordRequest):
+def change_my_password(
+    session: Session, actor: User, user_id: UUID, data: ChangeMyPasswordRequest
+):
     user = session.get(User, user_id)
     if not user:
         raise UserNotFoundError

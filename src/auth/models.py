@@ -40,6 +40,10 @@ class User(BaseSQLModel, table=True):
 
     user_auth: Optional["UserAuth"] = Relationship()
 
+    @property
+    def is_staff_or_admin(self):
+        return self.role in {UserRole.ADMIN, UserRole.STAFF}
+
 
 class UserAuth(BaseSQLModel, table=True):
     __tablename__ = "user_auth"

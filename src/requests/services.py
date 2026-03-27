@@ -128,9 +128,7 @@ def update_request(
 ) -> RequestResponse:
     request = get_request_id(request_id, session)
 
-    if (request.requester_id != actor.id) and (
-        actor.role not in [auth_models.UserRole.ADMIN, auth_models.UserRole.STAFF]
-    ):
+    if (request.requester_id != actor.id) and (not actor.is_staff_or_admin):
         raise RequestNotAllowed()
 
     request_detail = get_request_detail(request, session)
@@ -171,9 +169,7 @@ def update_request(
 def get_user_request_stats(
     actor: auth_models.User, user_id: UUID, session: Session
 ) -> UserStatsResponse:
-    if actor.id != user_id and (
-        actor.role not in [auth_models.UserRole.ADMIN, auth_models.UserRole.STAFF]
-    ):
+    if actor.id != user_id and (not actor.is_staff_or_admin):
         raise RequestNotAllowed()
 
     statement = select(
