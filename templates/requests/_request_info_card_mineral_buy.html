@@ -1,9 +1,10 @@
-<div class="card shadow-sm">
-<div class="card-header bg-white py-3">
-<h6 class="mb-0 fw-bold">Mineral Buyer Request Details</h6>
-</div>
-<div class="card-body">
-<div class="row g-4">
+{%extends 'requests/layouts/_request_info_card_base.html'%}
+
+
+{%block request_info_title%}Mineral Buyer Request Details{%endblock request_info_title%}
+
+{%block request_info_content%} 
+    <div class="row g-4">
 <div class="col-md-6">
 <label class="small text-muted mb-1 text-capitalize d-block">Material Type</label>
 <p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.material_type }}</p>
@@ -48,5 +49,4 @@
             <p class="fw-medium text-dark mb-0">{{ request_info.mineral_buy_request.collaboration_interest }}</p>
         </div>
     </div>
-</div>
-</div>
+{%endblock request_info_content%}

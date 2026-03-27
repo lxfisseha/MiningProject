@@ -1,4 +1,4 @@
-{%extends 'requests/base.html'%}
+{%extends 'requests/layouts/base.html'%}
 {%block main%}
 
     <style>
@@ -81,19 +81,10 @@
                         <label class="small text-muted mb-1 text-capitalize">last updated</label>
                         <p class="fw-medium">{{request_info.updated_at.date()}}</p>
                     </div>
-                
-
-                    {%if request_info.more_detail%}
-                        <div class="mb-3">
-                            <label class="small text-muted mb-1 text-capitalize">more detail</label>
-                            <p class=" mb-0">{{request_info.more_detail}}</p>
-                        </div>
-                    {%endif%}
                 </div>
             </div>
         
         </div>
-        {%if request_info.request_type != request_types.OTHER %}
         <div class="col-lg-7">
             {%if request_info.request_type == request_types.CONSULTING%}
                 {%include 'requests/_request_info_card_consulting.html'%}
@@ -103,9 +94,10 @@
                 {%include 'requests/_request_info_card_license_sell.html'%}
             {%elif request_info.request_type == request_types.MINERAL_BUYER %}
                 {%include 'requests/_request_info_card_mineral_buy.html'%}
+            {%elif request_info.request_type == request_types.OTHER %}
+                {%include 'requests/_request_info_card_other.html'%}
             {%endif%}
         </div>
-        {%endif%}
     </div>
 </div>
 

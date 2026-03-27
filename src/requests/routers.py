@@ -40,7 +40,7 @@ async def home_page(
     session: SESSION_DEP,
 ):
     return templates.TemplateResponse(
-        "requests/home.html",
+        "requests/pages/home.html",
         context={
             "request": request,
             "current_user": current_user,
@@ -122,7 +122,7 @@ def request_detail(
     current_user: CURRENT_USER_FROM_COOKIE,
 ):
     return templates.TemplateResponse(
-        "requests/request_detail.html",
+        "requests/pages/request_detail.html",
         context={
             "request": request,
             "request_info": get_request_with_detail(session, request_id, current_user),
@@ -140,7 +140,7 @@ def my_requests(
     request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP
 ):
     return templates.TemplateResponse(
-        "requests/my_requests.html",
+        "requests/pages/my_requests.html",
         {
             "request": request,
             "current_user": current_user,

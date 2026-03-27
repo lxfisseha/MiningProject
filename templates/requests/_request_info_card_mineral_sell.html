@@ -1,59 +1,60 @@
-<div class="card shadow-sm">
-<div class="card-header bg-white py-3">
-<h6 class="mb-0 fw-bold">Mineral Seller Request Details</h6>
-</div>
-<div class="card-body">
-<div class="row g-4">
-<div class="col-md-6">
-<label class="small text-muted mb-1 text-capitalize d-block">Material Type</label>
-<p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.material_type }}</p>
-</div>
-<div class="col-md-6">
-<label class="small text-muted mb-1 text-capitalize d-block">Location</label>
-<p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.location }}</p>
-</div>
 
-        <div class="col-md-6 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">Quantity</label>
-            <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.quantity }}</p>
-        </div>
-        <div class="col-md-6 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">License Holder Name</label>
-            <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.license_holder_name }}</p>
-        </div>
+{%extends 'requests/layouts/_request_info_card_base.html'%}
 
-        <div class="col-md-6 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">License Number</label>
-            <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.license_number }}</p>
-        </div>
-        <div class="col-md-6 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">Self Transportation</label>
-            {% if request_info.mineral_sell_request.self_transportation %}
-                <span class="badge bg-success">Yes</span>
-            {% else %}
-                <span class="badge bg-secondary">No</span>
-            {% endif %}
-        </div>
 
-        <div class="col-md-6 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">Self Production</label>
-            {% if request_info.mineral_sell_request.self_production %}
-                <span class="badge bg-success">Yes</span>
-            {% else %}
-                <span class="badge bg-secondary">No</span>
-            {% endif %}
-        </div>
+{%block request_info_title%}Mineral Seller Request Details{%endblock request_info_title%}
 
-        <div class="col-12 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">License Certificate Document</label>
-            <div class="d-flex align-items-center mt-1">
-                <i class="bi bi-file-earmark-pdf text-danger me-2 fs-4"></i>
-                <span class="fw-medium text-truncate me-3">License_Certificate_12345678.pdf</span>
-                <a href="/download/123454657689" class="btn btn-sm btn-outline-primary ms-auto">
-                    <i class="bi bi-download"></i> Download
-                </a>
+{%block request_info_content%} 
+    <div class="row g-4">
+    <div class="col-md-6">
+    <label class="small text-muted mb-1 text-capitalize d-block">Material Type</label>
+    <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.material_type }}</p>
+    </div>
+    <div class="col-md-6">
+    <label class="small text-muted mb-1 text-capitalize d-block">Location</label>
+    <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.location }}</p>
+    </div>
+
+            <div class="col-md-6 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">Quantity</label>
+                <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.quantity }}</p>
+            </div>
+            <div class="col-md-6 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">License Holder Name</label>
+                <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.license_holder_name }}</p>
+            </div>
+
+            <div class="col-md-6 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">License Number</label>
+                <p class="fw-medium text-dark mb-0">{{ request_info.mineral_sell_request.license_number }}</p>
+            </div>
+            <div class="col-md-6 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">Self Transportation</label>
+                {% if request_info.mineral_sell_request.self_transportation %}
+                    <span class="badge bg-success">Yes</span>
+                {% else %}
+                    <span class="badge bg-secondary">No</span>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">Self Production</label>
+                {% if request_info.mineral_sell_request.self_production %}
+                    <span class="badge bg-success">Yes</span>
+                {% else %}
+                    <span class="badge bg-secondary">No</span>
+                {% endif %}
+            </div>
+
+            <div class="col-12 border-top pt-3">
+                <label class="small text-muted mb-1 text-capitalize d-block">License Certificate Document</label>
+                <div class="d-flex align-items-center mt-1">
+                    <i class="bi bi-file-earmark-pdf text-danger me-2 fs-4"></i>
+                    <span class="fw-medium text-truncate me-3">License_Certificate_12345678.pdf</span>
+                    <a href="/download/123454657689" class="btn btn-sm btn-outline-primary ms-auto">
+                        <i class="bi bi-download"></i> Download
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-</div>
+{%endblock request_info_content%}

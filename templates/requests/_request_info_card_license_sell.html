@@ -1,17 +1,18 @@
-<div class="card shadow-sm">
-<div class="card-header bg-white py-3">
-<h6 class="mb-0 fw-bold">License Sell Request Details</h6>
-</div>
-<div class="card-body">
-<div class="row g-4">
-<div class="col-md-6">
-<label class="small text-muted mb-1 text-capitalize d-block">License Type</label>
-<p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.license_type.value }}</p>
-</div>
-<div class="col-md-6">
-<label class="small text-muted mb-1 text-capitalize d-block">Location</label>
-<p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.location }}</p>
-</div>
+{%extends 'requests/layouts/_request_info_card_base.html'%}
+
+{%block request_info_title%}License Sell Request Details{%endblock request_info_title%}
+
+{%block request_info_content%} 
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="small text-muted mb-1 text-capitalize d-block">License Type</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.license_type.value }}</p>
+        </div>
+
+        <div class="col-md-6">
+            <label class="small text-muted mb-1 text-capitalize d-block">Location</label>
+            <p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.location }}</p>
+        </div>
 
         <div class="col-md-6 border-top pt-3">
             <label class="small text-muted mb-1 text-capitalize d-block">Material Type</label>
@@ -53,5 +54,4 @@
             </div>
         </div>
     </div>
-</div>
-</div>
+{%endblock request_info_content%}
