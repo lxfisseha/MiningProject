@@ -32,7 +32,7 @@ def get_user_by_id(user_id: UUID, session: Session):
     return user
 
 
-def login_service(login_data: LoginRequest, session: Session) -> TokenResponse:
+def login_service(login_data: LoginRequest, session: Session) -> User:
     statement = select(User).where(User.email == login_data.email)
     user = session.exec(statement).first()
 
@@ -45,9 +45,7 @@ def login_service(login_data: LoginRequest, session: Session) -> TokenResponse:
     if user.status != UserStatus.APPROVED:
         raise UnApprovedUserErrorLogin()
 
-    token = create_access_token({"sub": str(user.id), "role": user.role})
-
-    return TokenResponse(access_token=token)
+    return user
 
 
 def registration_service(registration_data: RegisterUserRequest, session: Session):

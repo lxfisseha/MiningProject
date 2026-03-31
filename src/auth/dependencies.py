@@ -27,18 +27,6 @@ def get_current_user(session: SESSION_DEP, token: str = Depends(oauth2_scheme)):
     return user
 
 
-def get_current_staff_or_admin(current_user: User = Depends(get_current_user)):
-    if not current_user.is_staff_or_admin:
-        raise CredentialsError()
-    return current_user
-
-
-def get_current_admin(current_user: User = Depends(get_current_user)):
-    if current_user.role != UserRole.ADMIN:
-        raise CredentialsError()
-    return current_user
-
-
 def get_current_user_from_cookie(request: Request, session: SESSION_DEP):
     token = request.cookies.get("access_token")
     try:
@@ -48,8 +36,16 @@ def get_current_user_from_cookie(request: Request, session: SESSION_DEP):
         raise LoginRequiredError()
 
 
-CURRENT_USER_DEP = Annotated[User, Depends(get_current_user)]
-CURRENT_STAFF_OR_ADMIN_DEP = Annotated[User, Depends(get_current_staff_or_admin)]
-CURRENT_ADMIN_DEP = Annotated[User, Depends(get_current_admin)]
+def get_current_staff_or_admin_from_cookie(
+    current_user: User = Depends(get_current_user_from_cookie),
+):
+    if not current_user.is_staff_or_admin:
+        raise CredentialsError()
+    return current_user
+
+
+CURRENT_STAFF_OR_ADMIN_FROM_COOKIE = Annotated[
+    User, Depends(get_current_staff_or_admin_from_cookie)
+]
 
 CURRENT_USER_FROM_COOKIE = Annotated[User, Depends(get_current_user_from_cookie)]

@@ -1,0 +1,56 @@
+{%extends "base.html"%}
+
+{%block title%} Mining Support Platform Staff {%endblock title%}
+
+{%block body%}
+    <style>
+        .sidebar-link.active { 
+            background-color: #0d6efd !important;
+             color: white !important; 
+        }
+        .sidebar-link { 
+            color: #dee2e6; 
+        }
+        .sidebar-link:hover { 
+            background-color: rgba(255,255,255,0.1); color: white; 
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            display: none; /* hidden by default */
+            justify-content: center;
+            align-items: center;
+
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+
+        /* When HTMX is loading */
+        .htmx-request#loading-indicator {
+            display: flex;
+        }
+
+        /* Blur table content when loading */
+        .htmx-request #table-content {
+            filter: blur(3px);
+            pointer-events: none;
+        }
+    </style>
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            {%include "staff/components/sidebar.html"%}
+
+            {% block main %}
+
+            {% endblock main %}
+        </div>
+    </div>
+
+    
+{%endblock body%}

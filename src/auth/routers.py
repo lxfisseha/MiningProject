@@ -12,9 +12,21 @@ from fastapi import APIRouter, Request, Form
 
 from .dependencies import CURRENT_USER_FROM_COOKIE
 from .models import UserRole
-from .services import login_service, registration_service, change_my_password, update_user
-from .schemas import LoginRequest, UserResponse, RegisterUserRequest, ChangeMyPasswordRequest, UserUpdate
-from .utils import save_token_response_to_cookies
+from .services import (
+    login_service,
+    registration_service,
+    change_my_password,
+    update_user,
+)
+from .schemas import (
+    LoginRequest,
+    TokenResponse,
+    UserResponse,
+    RegisterUserRequest,
+    ChangeMyPasswordRequest,
+    UserUpdate,
+)
+from .utils import create_access_token, save_token_response_to_cookies
 
 router = APIRouter()
 
@@ -32,6 +44,7 @@ client_roles = [
 async def login(request: Request):
     return templates.TemplateResponse("auth/login.html", {"request": request})
 
+
 @router.get("/register")
 async def register(
     request: Request,
@@ -46,12 +59,17 @@ async def login_post(
     login_data: Annotated[LoginRequest, Form()],
     session: SESSION_DEP,
 ):
-    token = login_service(login_data, session)
+    user = login_service(login_data, session)
+    token = create_access_token({"sub": str(user.id), "role": user.role})
+
     response = HTMLResponse()
 
-    save_token_response_to_cookies(response, token)
+    save_token_response_to_cookies(response, TokenResponse(access_token=token))
 
-    response.headers["HX-Redirect"] = "/"
+    if user.is_staff_or_admin:
+        response.headers["HX-Redirect"] = "/staff/users/pending"
+    else:
+        response.headers["HX-Redirect"] = "/"
     return response
 
 
@@ -63,8 +81,6 @@ async def logout(request: Request):
     return response
 
 
-
-
 @router.post("/register")
 async def register(request: Request, session: SESSION_DEP):
     form_data = await request.form()
@@ -74,19 +90,28 @@ async def register(request: Request, session: SESSION_DEP):
 
     return templates.TemplateResponse(
         "auth/partials/_registration_success_response.html",
-        {"request": request, "msg": "user registered successfully!", "user_id": new_user.id},
+        {
+            "request": request,
+            "msg": "user registered successfully!",
+            "user_id": new_user.id,
+        },
     )
 
 
 @router.patch("/me")
-async def edit_user(request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP):
+async def edit_user(
+    request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP
+):
     form_data = await request.form()
     data = UserUpdate(**dict(form_data))
     time.sleep(1)
 
-    update_user(current_user,current_user.id, data, session)
+    update_user(current_user, current_user.id, data, session)
 
-    return templates.TemplateResponse("_success_alert.html", context={"request": request, "msg": "user updated successfully." })
+    return templates.TemplateResponse(
+        "_success_alert.html",
+        context={"request": request, "msg": "user updated successfully."},
+    )
 
 
 @router.post("/change_password")
@@ -98,5 +123,7 @@ async def change_password(
 
     change_my_password(session, current_user, current_user.id, data)
 
-    return templates.TemplateResponse("_success_alert.html", context={"request": request, "msg": "password changed successfully!"})
-
+    return templates.TemplateResponse(
+        "_success_alert.html",
+        context={"request": request, "msg": "password changed successfully!"},
+    )

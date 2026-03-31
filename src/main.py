@@ -17,6 +17,7 @@ from .exceptions import BaseException
 from src.auth.routers import router as auth_router
 from src.profiles.routers import router as profiles_router
 from src.requests.routers import router as requests_router
+from src.staff.routers import router as staff_router
 from fastapi.templating import Jinja2Templates
 
 from .profiles.exceptions import IncompleteRegistrationProfileNotFoundError
@@ -27,7 +28,7 @@ templates = Jinja2Templates("templates")
 app.include_router(auth_router)
 app.include_router(profiles_router)
 app.include_router(requests_router)
-
+app.include_router(staff_router)
 
 app.add_exception_handler(ValidationError, validation_exception_handler)
 
