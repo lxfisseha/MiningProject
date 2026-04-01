@@ -1,0 +1,15 @@
+{
+  "editor.formatOnSave": true,
+
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+
+  "[jinja-html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

@@ -32,6 +32,7 @@ def get_pending_users(actor: auth_models.User, session: Session, filters: UserFi
     if not actor.is_staff_or_admin:
         raise PermissionDeniedError()
     filters.status = auth_models.UserStatus.PENDING
+    filters.limit = 100
 
     users = get_users(actor, session, filters)
     return users
@@ -49,6 +50,8 @@ def get_users(actor: auth_models.User, session: Session, filters: UserFilters):
     if filters.role is not None:
         statement = statement.where(auth_models.User.role == filters.role)
     statement = _sort_user_select_statement(filters.sorting, statement)
+    
+    statement = statement.offset(filters.offset).limit(filters.limit)
 
     return session.exec(statement).all()
 

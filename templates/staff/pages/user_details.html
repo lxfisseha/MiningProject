@@ -1,0 +1,94 @@
+{%extends "staff/layouts/base.html"%} {%block main%}
+
+<div class="col py-4 px-md-5">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+      <h5 class="card-title mb-0 fw-bold text-dark">User Information</h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Full Name</label>
+          <span class="fw-semibold">{{ user_info.full_name }}</span>
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Email Address</label>
+          <span>{{ user_info.email }}</span>
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Phone Number</label>
+          <span>{{ user_info.phone | default('N/A', true) }}</span>
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Role</label>
+          <span class="badge bg-secondary">{{user_info.role.value}}</span>
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Account Status</label>
+          {% if user_info.status == user_status.APPROVED %}
+          <span class="badge bg-success">Approved</span>
+          {% elif user_info.status == user_status.PENDING %}
+          <span class="badge bg-warning text-dark">Pending</span>
+          {% else %}
+          <span class="badge bg-dark">{{ user_info.status.value }}</span>
+          {% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Preferred Language</label>
+          <span class="text-uppercase"
+            >{{ user_info.preferred_language | default('N/A', true) }}</span
+          >
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Created At</label>
+          <span>{{ user_info.created_at.date() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+      <h5 class="card-title mb-0 fw-bold text-dark">General Profile Details</h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Company Name</label>
+          <span class="fw-semibold"
+            >{{ user_info.profile.company_name | default('N/A', true) }}</span
+          >
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Approval Fee Paid</label>
+          {% if user_info.profile.approval_fee_paid %}
+          <span class="badge bg-success">Paid</span>
+          {% else %}
+          <span class="badge bg-secondary">N/A</span>
+          {% endif %}
+        </div>
+        <div class="col-6">
+          <label class="text-muted small d-block">Office Address</label>
+          <span
+            >{{ user_info.profile.office_address | default('N/A', true) }}</span
+          >
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Profile Created</label>
+          <span class="small"
+            >{{ user_info.profile.created_at | default('N/A', true) }}</span
+          >
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">Profile Updated</label>
+          <span class="small"
+            >{{ user_info.profile.updated_at | default('N/A', true) }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  {%include get_profile_template_name(user_info.role)%}
+</div>
+
+{%endblock main%}

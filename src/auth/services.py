@@ -119,3 +119,19 @@ def change_my_password(
     session.add(user.user_auth)
     session.commit()
     return 1
+
+def change_user_status(
+    actor: User,
+    session: Session,
+    user_id: UUID,
+    status: UserStatus,
+):
+    if not actor.is_staff_or_admin:
+        raise NotAllowedError()
+
+    user = get_user_by_id(user_id, session)
+    user.status = status
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user

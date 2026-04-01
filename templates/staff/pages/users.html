@@ -1,0 +1,99 @@
+{%extends "staff/layouts/base.html"%} {%block main%}
+<div class="col py-4 px-md-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Manage Users</h2>
+  </div>
+
+  <div class="card border-0 shadow-sm p-4">
+    <div class="mb-4">
+      <div class="input-group" style="max-width: 350px">
+        <span class="input-group-text bg-white border-end-0"
+          ><i class="bi bi-search"></i
+        ></span>
+        <input
+          id="userSearch"
+          hx-get="http://127.0.0.1:8000/staff/users/table"
+          hx-target="#usersContainer"
+          hx-indicator="#loading-indicator"
+          hx-trigger="keyup changed delay:500ms"
+          name="search"
+          type="text"
+          class="form-control border-start-0"
+          placeholder="Search users by email or name..."
+        />
+      </div>
+    </div>
+
+    <div class="row g-2 mb-3">
+      <div class="col-md-4">
+        <select
+          class="form-select"
+          id="userRoleFilter"
+          hx-get="{{url_for('get_users_table')}}"
+          hx-target="#usersContainer"
+          hx-indicator="#loading-indicator"
+          hx-include="#sortingSelector, #userStatusFilter"
+          hx-trigger="change"
+          name="role"
+        >
+          <option value="" selected>All Roles</option>
+          {%for role in user_roles%}
+          <option value="{{ role.value }}">{{ role.value }}</option>
+          {%endfor%}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <select
+          class="form-select"
+          id="userStatusFilter"
+          hx-get="{{url_for('get_users_table')}}"
+          hx-target="#usersContainer"
+          hx-indicator="#loading-indicator"
+          hx-include="#sortingSelector, #userRoleFilter"
+          hx-trigger="change"
+          name="status"
+        >
+          <option value="" selected>All Status</option>
+          {%for status in user_status%}
+          <option value="{{ status.value }}">{{ status.value }}</option>
+          {%endfor%}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+            <select  
+                id="sortingSelector"
+                name="sorting" 
+                hx-get="{{url_for('get_users_table')}}"
+                hx-target="#usersContainer"
+                hx-indicator="#loading-indicator"
+                hx-include="#userRoleFilter, #userStatusFilter, #userSearch"
+                hx-trigger="change" class="form-select shadow-none"
+                class="form-select">
+                <option value="lf">Latest First</option>
+                <option value="of">Oldest First</option>
+            </select>
+      </div>
+    </div>
+    <div style="position: relative; min-height: 100px">
+      <div
+        id="loading-indicator"
+        class="loading-overlay htmx-indicator justify-content-center py-5"
+      >
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <div
+        class="table-responsive"
+        id="usersContainer"
+        hx-get="{{url_for('get_users_table')}}"
+        hx-indicator="#loading-indicator"
+        hx-trigger="load"
+      ></div>
+
+ 
+    </div>
+  </div>
+</div>
+{%endblock main%}

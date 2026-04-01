@@ -1,0 +1,78 @@
+<table class="table table-hover align-middle">
+  <thead class="table-light">
+    <tr>
+      <th class="py-3">ID</th>
+      <th class="py-3" style="min-width: 150px">Full Name</th>
+      <th class="py-3">Email</th>
+      <th class="py-3">Role</th>
+      <th class="py-3" style="min-width: 100px">Created</th>
+      <th class="py-3">Status</th>
+      <th class="py-3 text-end">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for user in users%}
+    <tr>
+      <td><span class="text-muted small">{{user.id.__str__()[:8]}}</span></td>
+      <td class="fw-semibold">{{user.full_name}}</td>
+      <td>{{user.email}}</td>
+      <td>
+        <span class="badge bg-light text-dark border">{{user.role.value}}</span>
+      </td>
+      <td>{{user.created_at.date()}}</td>
+      <td>
+        {%if user.status == user_status.APPROVED%}
+        <span class="badge bg-success text-light border"
+          >{{user.status.value}}</span
+        >
+        {%elif user.status == user_status.REJECTED%}
+        <span class="badge bg-danger text-light border"
+          >{{user.status.value}}</span
+        >
+        {%else%}
+        <span class="badge bg-warning text-dark border"
+          >{{user.status.value}}</span
+        >
+        {%endif%}
+      </td>
+      <td class="text-end" style="min-width: 180px">
+        <a
+          href="{{url_for('get_user_details_page', user_id=user.id)}}"
+          class="btn btn-outline-primary btn-sm px-3 me-1"
+          >View</a
+        >
+        {% if user.status != user_status.SUSPENDED %}
+        <a hx-patch="{{url_for('suspend_user', user_id=user.id)}}" class="btn btn-outline-danger btn-sm px-3 me-1">Suspend</a>
+        {% endif %}
+        {% if user.status == user_status.PENDING %}
+        <a hx-patch="{{url_for('approve_user', user_id=user.id)}}" class="btn btn-success btn-sm me-1 px-3">Approve</a>
+        <a hx-patch="{{url_for('reject_user', user_id=user.id)}}" class="btn btn-outline-danger btn-sm px-3">Reject</a>
+        {% endif %} 
+        {%if user.status == user_status.SUSPENDED%}
+        <a hx-patch="{{url_for('approve_user', user_id=user.id)}}" class="btn btn-success btn-sm me-1 px-3">Unsuspend</a>
+        {% endif %}
+
+
+      </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination justify-content-start align-items-center">
+    <span class="small text-muted me-3">Pages:</span>
+    {% for p in range(1,users_count//15 + 2) %}
+    <li class="page-item">
+      <a
+        hx-get="{{url_for('get_users_table')}}?offset={{(p-1)*15}}"
+        hx-target="#usersContainer"
+        hx-indicator="#loading-indicator"
+        hx-include="#userSearch"
+        class="page-link {% if current_page == p %}active{% endif %}"
+        >{{p}}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</nav>

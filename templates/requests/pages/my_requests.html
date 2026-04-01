@@ -76,14 +76,13 @@
     </div>
 </div>
 
-<div class="row g-0 mb-3 align-items-center justify-content-between">
-    <div class="col-auto align-items-center">
-            <label class="small text-muted text-nowrap mb-0">Total Requests: </label>
-            <span style=" font-weight: 500;">{{user_stats.total_requests}}</span>
-            </div>
-    <div class="d-flex align-items-center col-auto">
-
-            <label class="small text-muted text-nowrap mb-0">Request Type:</label>  
+<div class="row g-2 mb-3 align-items-center">
+    <div class="col-md-4 ">
+        <label class="small  text-nowrap mb-0">Total Requests: </label>
+        <span>{{user_stats.total_requests}}</span>
+    </div>
+    <div class="col-md-4">
+ 
             <select 
                 id="requestTypeSelector"
                 hx-get="{{url_for('requests_table')}}"
@@ -93,32 +92,29 @@
                 hx-trigger="change"
                 name="request_type"
                 class="form-select shadow-none"
-                style="width: auto; border: none; background-color: transparent; font-weight: 500;"
+                
                 >
-            <option selected value="">Show All Types</option>
+            <option selected value="">All Request Types</option>
                 {% for request_type in  allowed_requests_to_roles[current_user.role] %}
                   <option value="{{request_type.value}}">{{request_type.value}}</option>
                 {% endfor %}
         
         </select>
-        </div>
+    </div>
 
-        <div class="d-flex align-items-center col-auto">
-            <label class="small text-muted text-nowrap mb-0">Sort by:</label>
-            <select  
-                id="sortingSelector"
-                name="sorting" 
-                hx-get="{{url_for('requests_table')}}"
-                hx-target="#requestsContainer"
-                hx-indicator="#loading-indicator"
-                hx-include="#requestTypeSelector"
-                hx-trigger="change" class="form-select shadow-none" style="width: auto; border: none; background-color: transparent; font-weight: 500;">
-                <option value="lf">Latest First</option>
-                <option value="of">Oldest First</option>
-            </select>
-        </div>
-  
-    
+    <div class="col-md-4">
+        <select  
+            id="sortingSelector"
+            name="sorting" 
+            hx-get="{{url_for('requests_table')}}"
+            hx-target="#requestsContainer"
+            hx-indicator="#loading-indicator"
+            hx-include="#requestTypeSelector"
+            hx-trigger="change" class="form-select shadow-none">
+            <option value="lf">Latest First</option>
+            <option value="of">Oldest First</option>
+        </select>
+    </div>
 
 </div>
 
@@ -134,7 +130,7 @@
 </div>
 
 <nav aria-label="Page navigation" class="mt-4">
-    <ul class="pagination justify-content-end align-items-center">
+    <ul class="pagination align-items-center">
 
         <span class="small text-muted me-3">Pages:</span>  
 

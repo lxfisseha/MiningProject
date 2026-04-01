@@ -2,7 +2,7 @@ import enum
 
 from src.auth import models as auth_models
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class UserSortOptions(str, enum.Enum):
@@ -15,3 +15,26 @@ class UserFilters(BaseModel):
     role: auth_models.UserRole | None = None
     sorting: UserSortOptions = UserSortOptions.latest_first
     search: str = ""
+    limit: int = 15
+    offset: int = 0
+
+    @validator("role", pre=True)
+    def empty_str_to_none(cls, v):
+        if v == "" or v == None:
+            return None
+        elif v not in list(auth_models.UserRole):
+            raise ValueError("Invalid user role")
+        return v
+    
+    @validator("status", pre=True)
+    def empty_str_to_none_status(cls, v):
+        if v == "" or v == None:
+            return None
+        elif v not in list(auth_models.UserStatus):
+            raise ValueError("Invalid user status")
+        return v
+
+    @property
+    def current_page(self):
+        print("filters are here", self.offset, self.limit)
+        return self.offset // self.limit + 1

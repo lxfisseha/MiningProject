@@ -1,0 +1,30 @@
+<div class="card shadow-sm mb-4 border-start border-info border-4">
+  <div class="card-header bg-white py-3">
+    <h5 class="card-title mb-0 fw-bold text-info">Equipment Owner Info</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="text-muted small d-block">Equipment Types Owned</label>
+        <span
+          >{{ user_info.profile.equipment_types_owned | default('N/A', true)
+          }}</span
+        >
+      </div>
+      <div class="col-md-6">
+        <label class="text-muted small d-block">Trade License ID</label>
+        <span class="text-muted small"
+          >{{ user_info.profile.trade_license_document_id | default('N/A', true)
+          }}</span
+        >
+      </div>
+      <div class="col-md-6">
+        <label class="text-muted small d-block">National ID Doc</label>
+        <span class="text-muted small"
+          >{{ user_info.profile.national_id_document_id | default('N/A', true)
+          }}</span
+        >
+      </div>
+    </div>
+  </div>
+</div>

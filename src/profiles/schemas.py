@@ -9,6 +9,7 @@ from src.auth import schemas as auth_schemas
 from ..auth.schemas import UserResponse
 
 
+
 class BaseProfileUpdate(BaseModel):
     company_name: Optional[str] = None
     office_address: Optional[str] = None
@@ -132,6 +133,19 @@ class UserAndProfileResponse(UserResponse):
     equipment_owner_profile: Optional[EquipmentOwnerProfileResponse] = None
     consultant_profile: Optional[ConsultantProfileResponse] = None
     buyer_profile: Optional[BuyerProfileResponse] = None
+
+    @property
+    def profile(self):
+        if self.role == auth_models.UserRole.LICENSE_HOLDER:
+            return self.license_holder_profile
+        elif self.role == auth_models.UserRole.EQUIPMENT_OWNER:
+            return self.equipment_owner_profile
+        elif self.role == auth_models.UserRole.CONSULTANT:
+            return self.consultant_profile
+        elif self.role == auth_models.UserRole.BUYER:
+            return self.buyer_profile
+        else:
+            return None
 
 
 

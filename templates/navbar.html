@@ -12,13 +12,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item me-lg-2">
-          <a class="nav-link active" href="{{ url_for('home') }}">Home</a>
+          <a class="nav-link {%if request.url == url_for('home') %}active{% endif %}" href="{{ url_for('home') }}">Home</a>
         </li>
         <li class="nav-item me-lg-2">
-          <a class="nav-link" href="{{ url_for('my_requests') }}">Requests</a>
+          <a class="nav-link {%if request.url == url_for('my_requests') %}active{% endif %}" href="{{ url_for('my_requests') }}">Requests</a>
         </li>
         <li class="nav-item me-lg-2">
-          <a class="nav-link" href="{{ url_for('my_profile') }}">Profile</a>
+          <a class="nav-link {%if request.url == url_for('my_profile') %}active{% endif %}" href="{{ url_for('my_profile') }}">Profile</a>
         </li>
         <li class="nav-item dropdown ms-lg-2">
           <a

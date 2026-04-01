@@ -16,6 +16,11 @@
                 <td><span class="badge bg-light text-dark border">{{user.role.value}}</span></td>
                 <td>{{user.created_at.date()}}</td>
                 <td class="text-end" id="status{{user.id}}">
+                    <a
+                        href="{{url_for('get_user_details_page', user_id=user.id)}}"
+                        class="btn btn-outline-primary btn-sm px-3 me-1"
+                        >View</a
+                        >
                     <button hx-patch="{{url_for('approve_user', user_id=user.id)}}" hx-target="#status{{user.id}}"  class="btn btn-success btn-sm me-1 px-3">Approve</button>
                     <button hx-patch="{{url_for('reject_user', user_id=user.id)}}" hx-target="#status{{user.id}}"  class="btn btn-outline-danger btn-sm px-3">Reject</button>
                 </td>

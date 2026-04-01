@@ -1,0 +1,28 @@
+<div class="card shadow-sm mb-4 border-start border-secondary border-4">
+  <div class="card-header bg-white py-3">
+    <h5 class="card-title mb-0 fw-bold text-secondary">Buyer Info</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="text-muted small d-block">Industry Type</label>
+        <span
+          >{{ user_info.profile.industry_type | default('N/A', true) }}</span
+        >
+      </div>
+      <div class="col-md-6">
+        <label class="text-muted small d-block">Plant Location</label>
+        <span
+          >{{ user_info.profile.plant_location | default('N/A', true) }}</span
+        >
+      </div>
+      <div class="col-md-6">
+        <label class="text-muted small d-block">Supporting Doc ID</label>
+        <span class="text-muted small"
+          >{{ user_info.profile.supporting_document_id | default('N/A', true)
+          }}</span
+        >
+      </div>
+    </div>
+  </div>
+</div>

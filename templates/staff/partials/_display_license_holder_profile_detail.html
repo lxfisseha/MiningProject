@@ -1,0 +1,48 @@
+<div class="card shadow-sm mb-4 border-start border-primary border-4">
+  <div class="card-header bg-white py-3">
+    <h5 class="card-title mb-0 fw-bold text-primary">License Holder Info</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="text-muted small d-block">License Type</label>
+        <span class="fw-semibold"
+          >{{ user_info.profile.license_type.value }}</span
+        >
+      </div>
+      <div class="col-md-6">
+        <label class="text-muted small d-block">Material Type</label>
+        <span>{{ user_info.profile.material_type}}</span>
+      </div>
+      <div class="col-md-6">
+        <label class="text-muted small d-block">License Number</label>
+        <code class="text-dark">{{ user_info.profile.license_number}}</code>
+      </div>
+      <div class="col-md-6">
+        <label class="text-muted small d-block">Site Address</label>
+        <span>{{ user_info.profile.site_address }}</span>
+      </div>
+      <div class="col-md-4">
+        <label class="text-muted small d-block">License Cert ID</label>
+        <span class="text-muted small"
+          >{{ user_info.profile.license_certificate_document_id | default('N/A',
+          true) }}</span
+        >
+      </div>
+      <div class="col-md-4">
+        <label class="text-muted small d-block">Geological Report ID</label>
+        <span class="text-muted small"
+          >{{ user_info.profile.geological_report_document_id | default('N/A',
+          true) }}</span
+        >
+      </div>
+      <div class="col-md-4">
+        <label class="text-muted small d-block">National ID doc</label>
+        <span class="text-muted small"
+          >{{ user_info.profile.national_id_document_id | default('N/A', true)
+          }}</span
+        >
+      </div>
+    </div>
+  </div>
+</div>
