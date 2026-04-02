@@ -15,7 +15,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link sidebar-link px-3 mb-1">
+                        <a href="{{url_for('get_all_requests_page')}}" class="nav-link sidebar-link px-3 mb-1 {%if request.url == url_for('get_all_requests_page') %}active{% endif %}">
                             <i class="bi bi-file-earmark-text me-2"></i> <span>Requests</span>
                         </a>
                     </li>

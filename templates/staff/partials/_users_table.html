@@ -68,7 +68,7 @@
         hx-get="{{url_for('get_users_table')}}?offset={{(p-1)*15}}"
         hx-target="#usersContainer"
         hx-indicator="#loading-indicator"
-        hx-include="#userSearch"
+        hx-include="#userSearch, #userRoleFilter, #userStatusFilter"
         class="page-link {% if current_page == p %}active{% endif %}"
         >{{p}}
       </a>

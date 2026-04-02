@@ -1,0 +1,58 @@
+<table class="table  table-hover align-center">
+    <thead class="table-light">
+        <tr>
+        <th class="text-nowrap py-3">Request ID</th>
+        <th class="py-3">Requester Email</th>
+        <th class="py-3">Request Type</th>
+        <th class="text-center py-3">Status</th>
+        <th class="py-3">Created At</th>
+        <th class="text-center py-3">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for request in requests %}
+
+            <tr>
+                <td><code class="text-dark fw-bold">{{request.id.__str__()[:8   ]}}</code></td>
+                <td>{{request.user.email}}</td>
+                <td><span class="text-capitalize badge bg-light text-dark border"> {{request.request_type.value}} </span></td>
+                <td class="text-center">
+                    {%if request.status == "approved" %}
+                    <span class="badge bg-success">APPROVED</span>
+                    {% elif request.status == "rejected" %}
+                    <span class="badge bg-danger">REJECTED</span>
+                    {% else %}
+                    <span class="badge bg-warning">{{request.status.value}}</span>
+                    {% endif %}
+                </td>
+                <td class="text-nowrap">Mar 28, 2026</td>
+                <td class="text-center">
+                    <div class="btn-group gap-0">
+                        <a href="{{url_for('get_request_detail_page', request_id=request.id)}}" class="btn btn-sm btn-outline-primary px-3">View Details</a>
+                    </div>
+                </td>
+            </tr>
+
+
+
+    {% endfor %} 
+        </tbody>
+</table>
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-start align-items-center">
+        <span class="small text-muted me-3">Pages:</span>
+        {% for p in range(1,requests_count//15 + 2) %}
+        <li class="page-item">
+        <a
+                hx-get="{{url_for('get_all_requests_table')}}?offset={{(p-1)*15}}"
+                hx-target="#requestsContainer"
+                hx-indicator="#loading-indicator"
+                hx-include="#requestTypeFilter, #requestStatusFilter"
+            class="page-link {% if current_page == p %}active{% endif %}"
+            >{{p}}
+        </a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
