@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm mb-4">
   <div class="container">
-    <a class="navbar-brand fw-bold text-primary" href="{{ url_for('home') }}">MINE.SUPPORT</a>
+    <a class="navbar-brand fw-bold text-primary" href="{{ url_for('home_page') }}">MINE.SUPPORT</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item me-lg-2">
-          <a class="nav-link {%if request.url == url_for('home') %}active{% endif %}" href="{{ url_for('home') }}">Home</a>
+          <a class="nav-link {%if request.url == url_for('home_page') %}active{% endif %}" href="{{ url_for('home_page') }}">Home</a>
         </li>
         <li class="nav-item me-lg-2">
           <a class="nav-link {%if request.url == url_for('my_requests') %}active{% endif %}" href="{{ url_for('my_requests') }}">Requests</a>
