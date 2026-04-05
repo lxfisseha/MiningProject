@@ -1,6 +1,7 @@
 from fastapi.exceptions import HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic_core import ValidationError
+from fastapi import Request
 
 
 class BaseException(HTTPException):
