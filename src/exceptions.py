@@ -9,11 +9,9 @@ class BaseException(HTTPException):
         super().__init__(status_code, message, *args)
         self.message = message
 
-
 class PermisionError(BaseException):
     def __init__(self, status_code: int = 401, message="permision denied.", *args):
         super().__init__(status_code, message, *args)
-
 
 async def validation_exception_handler(request: Request, exc: ValidationError):
     errors = exc.errors()

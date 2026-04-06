@@ -15,7 +15,8 @@ from .schemas import ProfileRegistrationRequest, UserAndProfileUpdate, ProfileUp
 from .services import create_user_profile, get_user_with_profile, update_profile
 from src.utils import nest_dotted_form_data
 from src.auth.dependencies import CURRENT_USER_FROM_COOKIE
-from ..requests.services import get_user_request_stats
+from src.requests.services import get_user_request_stats
+from src.csrf_protection import generate_csrf_dependency
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 templates = Jinja2Templates(directory="templates")
@@ -82,9 +83,10 @@ async def registration_success(request: Request):
 
 @router.get("/me")
 async def my_profile(
-    request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP
+    request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP, csrf: generate_csrf_dependency
 ):
-    return templates.TemplateResponse(
+    
+    response = templates.TemplateResponse(
         request,
         "profiles/myprofile.html",
         context={
@@ -94,8 +96,13 @@ async def my_profile(
             "user_status": UserStatus,
             "user_roles": UserRole,
             "license_types": LicenseType,
+            "csrf_token": csrf.csrf_token
         },
     )
+
+    csrf.save_signed_token_to_cookie(response)
+
+    return response
 
 
 @router.patch("/me")

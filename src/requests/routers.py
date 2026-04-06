@@ -20,6 +20,7 @@ from .services import (
 from .enums import RequestStatus, RequestType, ConsultancyType, StudyLevel
 from src.profiles.models import LicenseType
 from src.utils import nest_dotted_form_data
+from src.csrf_protection import generate_csrf_dependency
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -81,10 +82,10 @@ async def home_page(
 
 @router.get("/create_request_form/{request_type}")
 def create_request_form(
-    request: Request, request_type: RequestType, current_user: CURRENT_USER_FROM_COOKIE
+    request: Request, request_type: RequestType, current_user: CURRENT_USER_FROM_COOKIE, csrf:  generate_csrf_dependency
 ):
 
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         "requests/pages/create_request.html",
         context={
             "request": request,
@@ -97,8 +98,12 @@ def create_request_form(
             "request_form_template_name": _get_request_type_create_form_template_name(
                 request_type
             ),
+            "csrf_token": csrf.csrf_token
         },
     )
+
+    csrf.save_signed_token_to_cookie(response)
+    return response
 
 
 @router.post("/create_request/{request_type}")
@@ -143,9 +148,10 @@ def request_detail(
     request_id: UUID,
     session: SESSION_DEP,
     current_user: CURRENT_USER_FROM_COOKIE,
+    csrf: generate_csrf_dependency
 ):
     request_info = get_request_with_detail(session, request_id, current_user)
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         "requests/pages/request_detail.html",
         context={
             "request": request,
@@ -161,9 +167,13 @@ def request_detail(
             "edit_modal_template_name": _get_request_type_edit_form_template_name(
                 request_info.request_type
             ),
+            "csrf_token": csrf.csrf_token
         },
     )
 
+    csrf.save_signed_token_to_cookie(response)
+
+    return response
 
 @router.get("/myrequests")
 def my_requests(

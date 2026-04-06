@@ -12,8 +12,6 @@ def rate_limit_key(request: Request):
 
 limiter = Limiter(key_func=rate_limit_key, default_limits=["100/minute"])
 
-
-
 def rate_limit_handler(request, exc: RateLimitExceeded):
     return templates.TemplateResponse(
         "rate_limit_exceeded.html", context={"request": request, "msg": "Too many requests"}

@@ -2,6 +2,7 @@ import time
 
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi import Depends
 from starlette.responses import RedirectResponse
 
 from src.database import SESSION_DEP
@@ -26,7 +27,10 @@ from .schemas import (
     ChangeMyPasswordRequest,
     UserUpdate,
 )
+
 from .utils import create_access_token, save_token_response_to_cookies
+
+from src.csrf_protection import generate_csrf_dependency, csrf_protect
 
 router = APIRouter()
 
@@ -41,17 +45,28 @@ client_roles = [
 
 
 @router.get("/login")
-async def login(request: Request):
-    return templates.TemplateResponse("auth/login.html", {"request": request})
+async def login(request: Request, csrf: generate_csrf_dependency):
+    response = templates.TemplateResponse(
+        "auth/login.html",
+        {"request": request, "csrf_token": csrf.csrf_token}
+    )
+
+    csrf.save_signed_token_to_cookie(response)
+    
+    return response
 
 
 @router.get("/register")
 async def register(
     request: Request,
+    csrf: generate_csrf_dependency
 ):
-    return templates.TemplateResponse(
-        "auth/registration.html", {"request": request, "roles": client_roles}
+    response = templates.TemplateResponse(
+        "auth/registration.html", {"request": request, "roles": client_roles, "csrf_token": csrf.csrf_token}
     )
+
+    csrf.save_signed_token_to_cookie(response)
+    return response
 
 
 @router.post("/login")

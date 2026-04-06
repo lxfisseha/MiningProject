@@ -16,6 +16,7 @@ from src.requests import models as request_models
 from src.requests import services as request_services
 from src.requests.enums import RequestStatus, RequestType
 from src.requests.routers import _get_request_type_info_card_template_name
+from src.csrf_protection import generate_csrf_dependency
 
 from .services import get_pending_users, change_user_status, get_total_users_count, get_users, get_all_requests, get_total_requests_count
 from .schemas import UserFilters, UserSortOptions, RequestsFilters
@@ -38,11 +39,9 @@ role_to_template_name_map = {
 @router.get("/requests/all")
 def get_all_requests_page(
     request: Request,
-    current_user: CURRENT_STAFF_OR_ADMIN_FROM_COOKIE,
-    filters: Annotated[RequestsFilters, Query()],
-    session: SESSION_DEP,
+    current_user: CURRENT_STAFF_OR_ADMIN_FROM_COOKIE
 ):
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         "staff/pages/requests.html",
         context={
             "request": request,
@@ -51,6 +50,7 @@ def get_all_requests_page(
             "request_status": RequestStatus
         },
     )
+    return response
 
 @router.get("/requests/all/table")
 def get_all_requests_table(
@@ -79,14 +79,20 @@ def get_all_requests_table(
 def get_pending_users_page(
     request: Request,
     current_user: CURRENT_STAFF_OR_ADMIN_FROM_COOKIE,
+    csrf: generate_csrf_dependency
 ):
-    return templates.TemplateResponse(
+    
+    response = templates.TemplateResponse(
         "staff/pages/pending_users.html",
         context={
             "request": request,
             "current_user": current_user,
+            "csrf_token": csrf.csrf_token
         },
     )
+
+    csrf.save_signed_token_to_cookie(response)
+    return response
 
 @router.get("/users/pending/table")
 def get_pending_users_table(
@@ -110,8 +116,9 @@ def get_pending_users_table(
 def get_users_page(
     request: Request,
     current_user: CURRENT_STAFF_OR_ADMIN_FROM_COOKIE,
+    csrf: generate_csrf_dependency
 ):
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         "staff/pages/users.html",
         context={
             "request": request,
@@ -119,8 +126,13 @@ def get_users_page(
             "user_roles": auth_models.UserRole,
             "user_status": auth_models.UserStatus,
             "sorting_options": UserSortOptions,
+            "csrf_token": csrf.csrf_token
         },
     )
+
+    csrf.save_signed_token_to_cookie(response)
+    return response
+
 
 
 @router.get("/users/table")

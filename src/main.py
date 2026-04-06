@@ -1,14 +1,13 @@
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from starlette.responses import RedirectResponse
 from pydantic_core import ValidationError
 
 from .auth.exceptions import (
     LoginRequiredError,
 )
-from .exceptions import validation_exception_handler
 
 from .auth.schemas import LoginRequest
-from .exceptions import BaseException
+from .exceptions import BaseException, validation_exception_handler
 from src.auth.routers import router as auth_router
 from src.profiles.routers import router as profiles_router
 from src.requests.routers import router as requests_router
@@ -18,9 +17,13 @@ from fastapi.templating import Jinja2Templates
 from .profiles.exceptions import IncompleteRegistrationProfileNotFoundError
 from .rate_limiting import limiter, rate_limit_handler
 
+
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.errors import RateLimitExceeded
-app = FastAPI()
+
+from .csrf_protection import CSRFValidationError, csrf_validation_exception_handler, csrf_protect
+
+app = FastAPI(dependencies=[Depends(csrf_protect)])
 
 templates = Jinja2Templates("templates")
 
@@ -35,7 +38,7 @@ app.include_router(requests_router)
 app.include_router(staff_router)
 
 app.add_exception_handler(ValidationError, validation_exception_handler)
-
+app.add_exception_handler(CSRFValidationError, csrf_validation_exception_handler)
 
 
 @app.exception_handler(LoginRequiredError)
