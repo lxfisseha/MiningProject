@@ -5,7 +5,7 @@ from jwt.exceptions import InvalidTokenError
 import jwt
 
 from .exceptions import CredentialsError
-from src.auth import config
+from .config import settings as config
 from .schemas import TokenResponse, TokenData
 
 

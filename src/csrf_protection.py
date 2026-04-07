@@ -6,10 +6,10 @@ from pydantic import BaseModel
 from typing import Annotated
 
 from .exceptions import BaseException
-
+from .config import settings
 
 class CsrfSettings(BaseSettings):
-  secret_key: str = "asecrettoeverybody"
+  secret_key: str = settings.CSRF_SECRET_KEY
   cookie_samesite: str = "none"
   cookie_secure: bool = True
 
