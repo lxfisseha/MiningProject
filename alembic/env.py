@@ -12,6 +12,7 @@ from src.profiles.models import (
     BuyerProfile,
     ConsultantProfile,
 )
+from src.documents.models import Document, DocumentType, DocumentReviewStatus
 
 from src.requests.models import *
 

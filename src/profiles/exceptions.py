@@ -33,3 +33,6 @@ class IncompleteRegistrationProfileNotFoundError(BaseException):
     def __init__(self, status_code=401, message="profile not found",user_id=None, *args):
         super().__init__(status_code, message, *args)
         self.user_id = user_id
+class ProfileNotFoundError(BaseException):
+    def __init__(self, status_code=404, message="profile not found", *args):
+        super().__init__(status_code, message, *args)

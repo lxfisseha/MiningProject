@@ -68,6 +68,8 @@ async def file_upload_form(request: Request, user_id: UUID, session: SESSION_DEP
 
 @router.post("/file_upload_form/{user_id}")
 async def file_upload_form_post(request: Request, user_id: UUID, session: SESSION_DEP):
+    data = await request.form()
+    print(data)
     return templates.TemplateResponse(
         'profiles/_file_upload_success_response.html',
         {"request": request, "msg": "file saved successfully", "user_id": user_id}

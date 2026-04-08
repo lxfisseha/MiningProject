@@ -1,3 +1,4 @@
+from fastapi import UploadFile
 from sqlmodel import select, Session, SQLModel
 
 from src.auth import models as auth_models
