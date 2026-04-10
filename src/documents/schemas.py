@@ -1,12 +1,14 @@
 from pydantic import BaseModel
 from typing import Optional
-from .models import DocumentType
+from .models import DocumentType, Document
 from uuid import UUID
+
+
+
 
 class DocumentCreateRequest(BaseModel):
     uploaded_by: UUID
     document_type: DocumentType
-    subdir: Optional[str] = None
 
 
 class DocumentResponse(BaseModel):
@@ -15,8 +17,6 @@ class DocumentResponse(BaseModel):
     file_path: str
     status: str
     uploaded_by: UUID
-    related_type: Optional[str]
-    related_id: Optional[UUID]
 
 class FileSaveRequest(BaseModel):
     filename: str

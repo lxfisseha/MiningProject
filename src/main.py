@@ -12,6 +12,7 @@ from src.auth.routers import router as auth_router
 from src.profiles.routers import router as profiles_router
 from src.requests.routers import router as requests_router
 from src.staff.routers import router as staff_router
+from src.documents.routers import router as docs_router
 from fastapi.templating import Jinja2Templates
 
 from .profiles.exceptions import IncompleteRegistrationProfileNotFoundError
@@ -36,6 +37,7 @@ app.include_router(auth_router)
 app.include_router(profiles_router)
 app.include_router(requests_router)
 app.include_router(staff_router)
+app.include_router(docs_router)
 
 app.add_exception_handler(ValidationError, validation_exception_handler)
 app.add_exception_handler(CSRFValidationError, csrf_validation_exception_handler)

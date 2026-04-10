@@ -103,7 +103,6 @@ def create_user_profile(
     session.refresh(profile)
     return profile
 
-
 def update_profile(
     actor: User, user_id: UUID, data: ProfileUpdateRequest, session: Session
 ):

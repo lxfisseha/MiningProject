@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from src.auth.models import User
 from src.documents.models import Document
 from src.documents.schemas import DocumentCreateRequest, DocumentResponse
-from .schemas import FileReadRequest, FileSaveRequest, FileDeleteRequest
+from .schemas import FileReadRequest, FileSaveRequest, FileDeleteRequest, FileSaveResponse
 from .storage import FileStorageService
 from .models import DocumentType
 from uuid import UUID
@@ -15,14 +15,10 @@ class DocumentService:
     def __init__(self, storage: FileStorageService):
         self.storage = storage
 
-    async def create_document(
+    async def save_document(
         self,
-        session: Session,
         file: UploadFile,
-        data: DocumentCreateRequest
-    ) -> DocumentResponse:
-
-        subdir = f"{data.document_type.value.lower()}s"
+        subdir: str) -> FileSaveResponse:
 
         storage_request = FileSaveRequest(
             filename=file.filename,
@@ -31,34 +27,28 @@ class DocumentService:
             max_size=5 * 1024 * 1024
         )
 
-        result = await self.storage.save(file, storage_request)
+        file_save_response = await self.storage.save(file, storage_request)
+
+        return file_save_response
+    
+    def create_document_record(
+        self,
+        session: Session,
+        file_save_response: FileSaveResponse,
+        data: DocumentCreateRequest
+        )-> Document:
 
         document = Document(
             uploaded_by=data.uploaded_by,
             document_type=data.document_type,
-            file_path=result.file_path,
+            file_path=file_save_response.file_path,
         )
-
         session.add(document)
-        session.commit()
-        session.refresh(document)
+        session.flush()
+        return document
 
+    def to_response(self, document: Document) -> DocumentResponse:
         return DocumentResponse(**document.model_dump())
-
-    async def create_documents(
-        self,
-        db: Session,
-        files: List[UploadFile],
-        data: DocumentCreateRequest
-    ) -> List[DocumentResponse]:
-
-        documents = []
-
-        for file in files:
-            doc = await self.create_document(db, file, data)
-            documents.append(doc)
-
-        return documents
 
     def get_documents_by_type(
         self,
@@ -96,6 +86,9 @@ class DocumentService:
 
         db.delete(document)
         db.commit()
+    
+    async def delete_file_by_path(self, file_path: str):
+        self.storage.delete(FileDeleteRequest(file_path=file_path))
     
     def get_document_file(
         self,

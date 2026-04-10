@@ -19,7 +19,7 @@
 
       <form
         id="regForm"
-        hx-post="{{url_for('file_upload_form_post', user_id=user.id)}}"
+        hx-post="{{url_for('profile_documents_upload', user_id=user.id)}}"
         hx-target="#result"
         hx-swap="innerHTML"
         enctype="multipart/form-data"
