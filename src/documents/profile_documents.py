@@ -12,7 +12,7 @@ from src.profiles.services import get_profile_by_user
 from .services import DocumentService
 from .models import DocumentType
 from .schemas import DocumentCreateRequest
-
+from .exceptions import *
 
 from dataclasses import dataclass
 
@@ -90,14 +90,13 @@ class ProfileDocumentsService():
 
 
         if not docs:
-            raise ValueError("Missing 'documents' in form data")
+            raise MissingDocumentsError()
 
         config_dict = get_docs_config_for_role(actor.role)
 
         unexpected_fields = set(docs.keys()) - set(config_dict.keys())
         if unexpected_fields:
-            raise ValueError(f"Unexpected document fields: {unexpected_fields}")
-
+                raise UnexpectedDocumentError(unexpected_fields)
         saved_files = []
 
         for field_name, config in config_dict.items():
@@ -105,7 +104,7 @@ class ProfileDocumentsService():
             sub_dir = config.type.value.lower() + "s"
 
             if not file and config.required:
-                raise ValueError(f"Required document '{field_name}' is missing")
+                raise MissingRequiredDocumentError(field_name)
 
             if not file:
                 continue
@@ -116,7 +115,7 @@ class ProfileDocumentsService():
                 saved_files.append((saved_file, config))
             except: 
                 self._cleanup_files([f.file_path for f, _ in saved_files])
-                raise RuntimeError(f"Failed to save file for {field_name}")
+                raise UnableToSaveDocumentError(f"Failed to save file for {field_name}")
 
         for saved_file, config in saved_files:
             try:
@@ -129,13 +128,13 @@ class ProfileDocumentsService():
                     )
                 )
                 if not hasattr(profile, config.profile_field_name):
-                    raise RuntimeError(f"Invalid profile field {config.profile_field_name}")
+                    raise InvalidprofileFieldError(config.profile_field_name)
                 setattr(profile, config.profile_field_name, document_record.id)
             
             except Exception as e:
                 session.rollback()
                 await self._cleanup_files([f.file_path for f, _ in saved_files])
-                raise RuntimeError(f"Failed to create document records: {str(e)}")
+                raise UnableToCreateDocumentRecordError(f"Failed to create document records: {str(e)}")
 
         session.add(profile)
         session.commit()
@@ -151,10 +150,10 @@ class ProfileDocumentsService():
         allowed_types = ["application/pdf", "image/jpeg", "image/png"]
 
         if file.content_type not in allowed_types:
-            raise ValueError(f"Unsupported file type: {file.content_type}")
+            raise InvalidFileTypeError(file.content_type)
         
         if not file.filename:
-            raise ValueError("File must have a name")
+            raise FileHasNoNameError()
 
 def get_profile_documents_service(
     document_service: DocumentService,
