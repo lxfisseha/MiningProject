@@ -28,6 +28,11 @@ class UnableToCreateDocumentRecordError(DocumentException):
         self.message = f"Unable to create document record: {details}"
         self.status_code = 500
 
+class InvalidRequestFieldError(DocumentException):
+    def __init__(self, field_name: str):
+        self.message = f"Invalid request field {field_name}"
+        self.status_code = 400
+
 class InvalidprofileFieldError(DocumentException):
     def __init__(self, field_name: str):
         self.message = f"Invalid profile field {field_name}"

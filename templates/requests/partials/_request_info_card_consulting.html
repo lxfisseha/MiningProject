@@ -37,15 +37,20 @@
             <label class="small text-muted mb-1 text-capitalize d-block">License Number</label>
             <p class="fw-medium">{{request_info.consulting_request.license_number}}</p>
         </div>
+        
+        {%for doc in request_info.documents%}
         <div class="col-12 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">License Certificate Document ID</label>
+            <label class="small text-muted mb-1 text-capitalize d-block">{{doc.document_type.value}} Document</label>
             <div class="d-flex align-items-center mt-1">
                 <i class="bi bi-file-earmark-pdf text-danger me-2 fs-4"></i>
-                <span class="fw-medium">DOC-CERT-7721-X.pdf</span>
-                <a href="/download/123454657689" class="btn btn-sm btn-outline-primary ms-auto">
+                <span class="fw-medium text-truncate me-3">{{doc.file_path.split('\\')[-1] }}</span>
+                <a href="{{url_for('download_document', document_id=doc.id)}}" class="btn btn-sm btn-outline-primary ms-auto">
                     <i class="bi bi-download"></i> Download
                 </a>
             </div>
         </div>
+        {%endfor%}
+        
+        
     </div>
 {%endblock request_info_content%}

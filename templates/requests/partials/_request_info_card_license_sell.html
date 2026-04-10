@@ -31,27 +31,19 @@
             <label class="small text-muted mb-1 text-capitalize d-block">License Number</label>
             <p class="fw-medium text-dark mb-0">{{ request_info.license_sell_request.license_number }}</p>
         </div>
-
+            
+        {%for doc in request_info.documents%}
         <div class="col-12 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">License Certificate Document</label>
+            <label class="small text-muted mb-1 text-capitalize d-block">{{doc.document_type.value}} Document</label>
             <div class="d-flex align-items-center mt-1">
                 <i class="bi bi-file-earmark-pdf text-danger me-2 fs-4"></i>
-                <span class="fw-medium text-truncate me-3">License_Certificate_143.pdf</span>
-                <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
+                <span class="fw-medium text-truncate me-3">{{doc.file_path.split('\\')[-1] }}</span>
+                <a href="{{url_for('download_document', document_id=doc.id)}}" class="btn btn-sm btn-outline-primary ms-auto">
                     <i class="bi bi-download"></i> Download
                 </a>
             </div>
         </div>
+        {%endfor%}
 
-        <div class="col-12 border-top pt-3">
-            <label class="small text-muted mb-1 text-capitalize d-block">Geological Report Document</label>
-            <div class="d-flex align-items-center mt-1">
-                <i class="bi bi-file-earmark-text text-primary me-2 fs-4"></i>
-                <span class="fw-medium text-truncate me-3">Geological_Report_12345.pdf</span>
-                <a href="#" class="btn btn-sm btn-outline-primary ms-auto">
-                    <i class="bi bi-download"></i> Download
-                </a>
-            </div>
-        </div>
     </div>
 {%endblock request_info_content%}

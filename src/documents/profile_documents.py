@@ -74,6 +74,12 @@ ROLE_DOCUMENT_CONFIGS = {
 def get_docs_config_for_role(role: UserRole) -> Dict[str, DocumentConfig]:
     return ROLE_DOCUMENT_CONFIGS.get(role, {})
 
+def get_are_docs_required(role: UserRole) -> bool:
+    config_dict = get_docs_config_for_role(role)
+    for field_name, config in config_dict.items():
+        if config.required:
+            return True
+    return False
 
 class ProfileDocumentsService():
     def __init__(self, document_service: DocumentService):
@@ -84,15 +90,15 @@ class ProfileDocumentsService():
         form_data: Dict[str, Any],
         session: Session,
         actor: User,
+        profile: Any
     ) -> None:
         docs = form_data.get("documents", None)
-        profile = get_profile_by_user(actor, session)
+        config_dict = get_docs_config_for_role(actor.role)
 
 
-        if not docs:
+        if not docs and get_are_docs_required(actor.role):
             raise MissingDocumentsError()
 
-        config_dict = get_docs_config_for_role(actor.role)
 
         unexpected_fields = set(docs.keys()) - set(config_dict.keys())
         if unexpected_fields:
@@ -114,7 +120,7 @@ class ProfileDocumentsService():
                 saved_file = await self.document_service.save_document(file, sub_dir)
                 saved_files.append((saved_file, config))
             except: 
-                self._cleanup_files([f.file_path for f, _ in saved_files])
+                await self._cleanup_files([f.file_path for f, _ in saved_files])
                 raise UnableToSaveDocumentError(f"Failed to save file for {field_name}")
 
         for saved_file, config in saved_files:

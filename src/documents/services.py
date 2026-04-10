@@ -50,14 +50,14 @@ class DocumentService:
     def to_response(self, document: Document) -> DocumentResponse:
         return DocumentResponse(**document.model_dump())
 
-    def get_documents_by_type(
+    def get_documents_by_ids(
         self,
         db: Session,
-        document_type: DocumentType,
+        ids: list[UUID],
     ) -> List[DocumentResponse]:
 
         statement = select(Document).where(
-            Document.document_type == document_type
+            Document.id.in_(ids)
         )
 
         results = db.exec(statement).all()
@@ -101,7 +101,7 @@ class DocumentService:
         if not document:
             raise HTTPException(404, "Document not found")
 
-        if not current_user.is_admin and document.uploaded_by != current_user.id:
+        if not current_user.is_staff_or_admin and document.uploaded_by != current_user.id:
             raise HTTPException(403, "Not allowed to access this document")
 
         if not document.file_path:

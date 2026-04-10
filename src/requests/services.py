@@ -56,6 +56,11 @@ request_type_to_response_model_map = {
     RequestType.MINERAL_SELLER: MineralSellerRequestResponse,
 }
 
+from src.documents.request_documents import get_request_documents_service
+from src.documents.services import DocumentService
+from src.documents.storage import FileStorageService
+
+
 
 def _get_request_detail_attribute_name(request_type: RequestType) -> str:
     attr = request_type_to_request_detail_attribute_name.get(request_type, None)
@@ -78,7 +83,7 @@ def _get_request_detail_response_model(request_type: RequestType) -> type:
     return model
 
 
-def create_request(
+async def create_request(
     session: Session, data: RequestCreate, actor: auth_models.User
 ) -> RequestDetailResponse:
     if data.request_type not in config.ALLOWED_REQUEST_TYPES_TO_ROLES[actor.role]:
@@ -100,18 +105,25 @@ def create_request(
     request_detail_model = _get_request_detail_model(data.request_type)
     request_data_attr_name = _get_request_detail_attribute_name(data.request_type)
 
-    print("we found the request detail model:", request_detail_model)
-    print("we found the request attribute model:", request_data_attr_name)
     detail_data = getattr(data, request_data_attr_name, None)
-    print("heres the detail data: ", detail_data)
     if not detail_data:
         raise RequestInfoNotFound()
+    
     request_detail = request_detail_model.model_validate(
         detail_data, update={"request_id": request.id}
     )
 
     session.add(request_detail)
-    session.commit()
+    session.flush()
+
+    request_docs_service = get_request_documents_service(DocumentService(FileStorageService()))
+
+    try:
+        await request_docs_service.save_request_documents(data.model_dump(),session, request, request_detail, actor)
+    except Exception as e:
+        session.rollback()
+        raise
+
 
     response = RequestDetailResponse.model_validate(request)
     request_detail_response = _get_request_detail_response_model(
@@ -242,18 +254,22 @@ def _sort_requests_statement(
 def get_request_with_detail(
     session: Session, request_id: UUID, actor: auth_models.User
 ) -> RequestDetailResponse:
+    request_docs_service = get_request_documents_service(DocumentService(FileStorageService()))
+
     request = get_request_id(request_id, session)
     if request.requester_id != actor.id and actor.role not in {
         auth_models.UserRole.ADMIN,
         auth_models.UserRole.STAFF,
     }:
         raise RequestNotAllowed()
+    
 
     response = RequestDetailResponse.model_validate(request)
     if request.request_type == RequestType.OTHER:
         return response
 
     request_detail = get_request_detail(request, session)
+    response.documents = request_docs_service.get_request_documents(request, request_detail, session)
     request_detail_response = _get_request_detail_response_model(
         request.request_type
     ).model_validate(request_detail)

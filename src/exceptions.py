@@ -13,6 +13,10 @@ class BaseException(HTTPException):
     def detail(self):
         return self.message
     
+    @detail.setter
+    def detail(self, value):
+        self.message = value
+    
 
 class PermisionError(BaseException):
     def __init__(self, status_code: int = 401, message="permision denied.", *args):

@@ -12,6 +12,8 @@ from .enums import (
     RequestSortOptions,
 )
 
+from src.documents.schemas import DocumentResponse
+
 from src.profiles.models import LicenseType
 
 
@@ -221,10 +223,12 @@ class RequestDetailResponse(RequestResponse):
     mineral_sell_request: MineralSellerRequestResponse | None = None
     license_sell_request: LicenseSellRequestResponse | None = None
 
+    documents: list[DocumentResponse] = []
 
 class RequestCreate(BaseModel):
     request_type: RequestType
     more_detail: Optional[str] = None
+    documents: dict = []
 
     license_sell_request: LicenseSellRequestCreate | None = None
     mineral_buy_request: MineralBuyerRequestCreate | None = None

@@ -117,7 +117,7 @@ async def create_request_post(
     data = RequestCreate(
         request_type=request_type, **nest_dotted_form_data(dict(form_data))
     )
-    create_request(session, data, current_user)
+    await create_request(session, data, current_user)
 
     return templates.TemplateResponse(
         "_success_alert.html",
@@ -151,6 +151,7 @@ def request_detail(
     csrf: generate_csrf_dependency
 ):
     request_info = get_request_with_detail(session, request_id, current_user)
+
     response = templates.TemplateResponse(
         "requests/pages/request_detail.html",
         context={
