@@ -4,6 +4,10 @@ from typing import Annotated
 
 from starlette.datastructures import FormData
 
+from src.documents.profile_documents import get_profile_documents_service
+from src.documents.services import DocumentService
+from src.documents.storage import FileStorageService
+
 from ..auth.models import UserRole, UserStatus
 from ..auth.services import get_user_by_id
 from ..database import SESSION_DEP
@@ -78,18 +82,20 @@ async def registration_success(request: Request):
 async def my_profile(
     request: Request, current_user: CURRENT_USER_FROM_COOKIE, session: SESSION_DEP, csrf: generate_csrf_dependency
 ):
-    
+    profile_docs_service = get_profile_documents_service(document_service=DocumentService(FileStorageService()))
+    user_info = get_user_with_profile(current_user, session)
+
     response = templates.TemplateResponse(
         request,
         "profiles/myprofile.html",
         context={
-            "current_user": get_user_with_profile(current_user, session),
+            "current_user": user_info,
             "user_stats": get_user_request_stats(current_user, current_user.id, session),
-            "user_documents": [],
             "user_status": UserStatus,
             "user_roles": UserRole,
             "license_types": LicenseType,
-            "csrf_token": csrf.csrf_token
+            "csrf_token": csrf.csrf_token,
+            "user_documents": profile_docs_service.get_profile_documents(session, current_user, user_info.profile)
         },
     )
 

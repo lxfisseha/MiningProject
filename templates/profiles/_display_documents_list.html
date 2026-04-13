@@ -17,14 +17,14 @@
     </div>
     <div class="btn-group">
       <a
-        href="{{url_for('view_document', document_id=document.id)}}"
+        href="{{url_for('download_document', document_id=document.id)}}"
         target="new"
         class="btn btn-sm btn-light border"
         >View</a
       >
-      <a href="{{url_for('replace_file')}}" class="btn btn-sm btn-light border"
+      <!-- <a class="btn btn-sm btn-light border"
         >Replace</a
-      >
+      > -->
     </div>
   </li>
   {% endfor %}

@@ -85,6 +85,21 @@ class ProfileDocumentsService():
     def __init__(self, document_service: DocumentService):
         self.document_service = document_service
 
+    def get_profile_documents(
+        self,
+        session: Session,
+        user: User,
+        profile: Any
+    ):
+        config_dict = get_docs_config_for_role(user.role)
+        ids_to_fields = {}
+        for field_name, config in config_dict.items():
+            if hasattr(profile, config.profile_field_name):
+                ids_to_fields[getattr(profile, config.profile_field_name)] = field_name
+
+        documents = self.document_service.get_documents_by_ids(session, ids_to_fields.keys())
+        return documents
+
     async def save_profile_documents(
         self,
         form_data: Dict[str, Any],
