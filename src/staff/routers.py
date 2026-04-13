@@ -6,17 +6,17 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
 
-from src.auth.dependencies import CURRENT_STAFF_OR_ADMIN_FROM_COOKIE
-from src.auth import models as auth_models
-from src.auth import services as auth_services
-from src.profiles import services as profile_services
-from src.database import SESSION_DEP
-from src.profiles.exceptions import InvalidRoleError
-from src.requests import models as request_models
-from src.requests import services as request_services
-from src.requests.enums import RequestStatus, RequestType
-from src.requests.routers import _get_request_type_info_card_template_name
-from src.csrf_protection import generate_csrf_dependency
+from ..auth.dependencies import CURRENT_STAFF_OR_ADMIN_FROM_COOKIE
+from ..auth import models as auth_models
+from ..auth import services as auth_services
+from ..profiles import services as profile_services
+from ..database import SESSION_DEP
+from ..profiles.exceptions import InvalidRoleError
+from ..requests import models as request_models
+from ..requests import services as request_services
+from ..requests.enums import RequestStatus, RequestType
+from ..requests.routers import _get_request_type_info_card_template_name
+from ..csrf_protection import generate_csrf_dependency
 
 from .services import get_pending_users, change_user_status, get_total_users_count, get_users, get_all_requests, get_total_requests_count
 from .schemas import UserFilters, UserSortOptions, RequestsFilters

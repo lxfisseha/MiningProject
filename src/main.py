@@ -8,11 +8,11 @@ from .auth.exceptions import (
 
 from .auth.schemas import LoginRequest
 from .exceptions import BaseException, validation_exception_handler
-from src.auth.routers import router as auth_router
-from src.profiles.routers import router as profiles_router
-from src.requests.routers import router as requests_router
-from src.staff.routers import router as staff_router
-from src.documents.routers import router as docs_router
+from .auth.routers import router as auth_router
+from .profiles.routers import router as profiles_router
+from .requests.routers import router as requests_router
+from .staff.routers import router as staff_router
+from .documents.routers import router as docs_router
 from fastapi.templating import Jinja2Templates
 
 from .profiles.exceptions import IncompleteRegistrationProfileNotFoundError

@@ -2,12 +2,12 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from uuid import UUID
-from src.database import SESSION_DEP
-from src.utils import nest_dotted_form_data
+from ..database import SESSION_DEP
+from ..utils import nest_dotted_form_data
 
-from src.auth.services import get_user_by_id
-from src.auth.dependencies import CURRENT_USER_FROM_COOKIE
-from src.profiles.services import get_profile_by_user
+from ..auth.services import get_user_by_id
+from ..auth.dependencies import CURRENT_USER_FROM_COOKIE
+from ..profiles.services import get_profile_by_user
 
 from .profile_documents import get_profile_documents_service
 from .services import DocumentService

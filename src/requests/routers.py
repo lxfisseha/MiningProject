@@ -3,8 +3,8 @@ from fastapi.templating import Jinja2Templates
 from uuid import UUID
 from typing import Annotated
 
-from src.database import SESSION_DEP
-from src.auth.dependencies import CURRENT_USER_FROM_COOKIE
+from ..database import SESSION_DEP
+from ..auth.dependencies import CURRENT_USER_FROM_COOKIE
 from . import config
 import time
 

@@ -1,4 +1,6 @@
-def nest_dotted_form_data(form: dict):
+from typing import Dict, Any
+
+def nest_dotted_form_data(form: Dict[str, Any]) -> Dict[str, Any]:
     nested = {}
 
     for key, value in form.items():

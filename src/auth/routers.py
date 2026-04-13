@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Depends
 from starlette.responses import RedirectResponse
 
-from src.database import SESSION_DEP
+from ..database import SESSION_DEP
 from typing import Annotated
 
 

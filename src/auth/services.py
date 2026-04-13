@@ -25,7 +25,9 @@ from .exceptions import WrongPasswordError, NotAllowedError
 from ..profiles.exceptions import NotAllowed
 
 
-def get_user_by_id(user_id: UUID, session: Session):
+from typing import Optional
+
+def get_user_by_id(user_id: UUID, session: Session) -> User:
     user = session.get(User, user_id)
     if not user:
         raise UserNotFoundError()
@@ -48,7 +50,7 @@ def login_service(login_data: LoginRequest, session: Session) -> User:
     return user
 
 
-def registration_service(registration_data: RegisterUserRequest, session: Session):
+def registration_service(registration_data: RegisterUserRequest, session: Session) -> User:
     statement = select(User).where(User.email == registration_data.email)
     existing_user = session.exec(statement).first()
 
@@ -77,7 +79,7 @@ def _create_user_auth_record(password: str, user_id: UUID, session: Session):
     session.add(user_auth)
 
 
-def update_user(actor: User, user_id: UUID, data: UserUpdate, session: Session):
+def update_user(actor: User, user_id: UUID, data: UserUpdate, session: Session) -> User:
     user = session.get(User, user_id)
 
     if not user:

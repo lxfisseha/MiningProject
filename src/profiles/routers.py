@@ -4,9 +4,9 @@ from typing import Annotated
 
 from starlette.datastructures import FormData
 
-from src.auth.models import UserRole, UserStatus
-from src.auth.services import get_user_by_id
-from src.database import SESSION_DEP
+from ..auth.models import UserRole, UserStatus
+from ..auth.services import get_user_by_id
+from ..database import SESSION_DEP
 from uuid import UUID
 
 from .exceptions import InvalidRoleError
