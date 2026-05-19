@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request, Query, Depends
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from uuid import UUID
 from typing import Annotated
@@ -60,6 +61,9 @@ async def home_page(
     current_user: CURRENT_USER_FROM_COOKIE,
     session: SESSION_DEP,
 ):
+    if current_user.is_staff_or_admin:
+        return RedirectResponse(url="/staff/users/pending")
+    
     return templates.TemplateResponse(
         "requests/pages/home.html",
         context={
