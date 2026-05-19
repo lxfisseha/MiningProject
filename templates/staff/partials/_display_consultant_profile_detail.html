@@ -19,23 +19,23 @@
       </div>
       <div class="col-md-4">
         <label class="text-muted small d-block">National ID Doc</label>
-        <span class="text-muted small"
+        <a href="{{ url_for('view_document', document_id=user_info.profile.national_id_document_id) }}" target="_blank" class="text-muted small"
           >{{ user_info.profile.national_id_document_id | default('N/A', true)
-          }}</span
+          }}</a
         >
       </div>
       <div class="col-md-4">
         <label class="text-muted small d-block">Prof. License ID</label>
-        <span class="text-muted small"
+        <a href="{{ url_for('view_document', document_id=user_info.profile.professional_license_document_id) }}" target="_blank"   class="text-muted small"
           >{{ user_info.profile.professional_license_document_id |
-          default('N/A', true) }}</span
+          default('N/A', true) }}</a
         >
       </div>
       <div class="col-md-4">
         <label class="text-muted small d-block">Supporting Doc ID</label>
-        <span class="text-muted small"
+        <a href="{{ url_for('view_document', document_id=user_info.profile.supporting_document_id) }}" target="_blank" class="text-muted small"
           >{{ user_info.profile.supporting_document_id | default('N/A', true)
-          }}</span
+          }}</a
         >
       </div>
     </div>

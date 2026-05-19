@@ -18,9 +18,8 @@
       </div>
       <div class="col-md-6">
         <label class="text-muted small d-block">Supporting Doc ID</label>
-        <span class="text-muted small"
-          >{{ user_info.profile.supporting_document_id | default('N/A', true)
-          }}</span
+        <a href="{{ url_for('view_document', document_id=user_info.profile.supporting_document_id) }}" target="_blank" class="text-muted small"
+          >{{ user_info.profile.supporting_document_id | default('N/A', true) }}</a
         >
       </div>
     </div>
