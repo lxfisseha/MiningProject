@@ -41,17 +41,19 @@
           class="btn btn-outline-primary btn-sm px-3 me-1"
           >View</a
         >
-        {% if user.status != user_status.SUSPENDED %}
-        <a hx-patch="{{url_for('suspend_user', user_id=user.id)}}" class="btn btn-outline-danger btn-sm px-3 me-1">Suspend</a>
-        {% endif %}
         {% if user.status == user_status.PENDING %}
-        <a hx-patch="{{url_for('approve_user', user_id=user.id)}}" class="btn btn-success btn-sm me-1 px-3">Approve</a>
-        <a hx-patch="{{url_for('reject_user', user_id=user.id)}}" class="btn btn-outline-danger btn-sm px-3">Reject</a>
-        {% endif %} 
-        {%if user.status == user_status.SUSPENDED%}
-        <a hx-patch="{{url_for('approve_user', user_id=user.id)}}" class="btn btn-success btn-sm me-1 px-3">Unsuspend</a>
-        {% endif %}
+          <a hx-patch="{{url_for('approve_user', user_id=user.id)}}" class="btn btn-success btn-sm me-1 px-3">Approve</a>
+          <a hx-patch="{{url_for('reject_user', user_id=user.id)}}" class="btn btn-outline-danger btn-sm px-3">Reject</a>
+        {%else%}
 
+          {% if user.status != user_status.SUSPENDED %}
+            <a hx-patch="{{url_for('suspend_user', user_id=user.id)}}" class="btn btn-outline-danger btn-sm px-3 me-1">Suspend</a>
+          {% endif %}
+          
+          {%if user.status == user_status.SUSPENDED%}
+            <a hx-patch="{{url_for('approve_user', user_id=user.id)}}" class="btn btn-success btn-sm me-1 px-3">Unsuspend</a>
+          {% endif %}
+        {% endif %}
 
       </td>
     </tr>
