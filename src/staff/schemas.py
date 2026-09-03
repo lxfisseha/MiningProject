@@ -6,12 +6,8 @@ from pydantic import BaseModel, validator
 
 
 
-class RequestSortOptions(str, enum.Enum):
-    latest_first = "lf"
-    oldest_first = "of"
-
 class RequestsFilters(BaseModel): 
-    sorting: RequestSortOptions = RequestSortOptions.latest_first
+    sorting: str = "lf"
     request_type: RequestType | None = None
     status: RequestStatus | None = None
     user_id: str | None = None

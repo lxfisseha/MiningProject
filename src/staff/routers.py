@@ -1,4 +1,3 @@
-import time
 from uuid import UUID
 
 from fastapi import APIRouter, Query, Request
@@ -12,7 +11,6 @@ from ..auth import services as auth_services
 from ..profiles import services as profile_services
 from ..database import SESSION_DEP
 from ..profiles.exceptions import InvalidRoleError
-from ..requests import models as request_models
 from ..requests import services as request_services
 from ..requests.enums import RequestStatus, RequestType
 from ..requests.routers import _get_request_type_info_card_template_name
@@ -59,7 +57,6 @@ def get_all_requests_table(
     filters: Annotated[RequestsFilters, Query()],
     session: SESSION_DEP,
 ):
-    time.sleep(1)  # Simulate loading time
     requests = get_all_requests(current_user, session, filters)
     requests_count = get_total_requests_count(current_user, session, filters)
     return templates.TemplateResponse(

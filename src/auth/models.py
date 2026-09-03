@@ -9,7 +9,7 @@ from src.models import BaseSQLModel
 
 class UserRole(str, enum.Enum):
     LICENSE_HOLDER = "license Holder"
-    EQUIPMENT_OWNER = "equpment Owner"
+    EQUIPMENT_OWNER = "equipment Owner"
     CONSULTANT = "consultant"
     BUYER = "buyer"
     STAFF = "staff"

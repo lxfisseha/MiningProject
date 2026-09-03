@@ -6,10 +6,10 @@ from src.auth import models as auth_models
 from src.auth import services as auth_services
 
 from src.requests import models as request_models
-from src.requests.enums import RequestStatus, RequestType
+from src.requests.enums import RequestStatus, RequestType, RequestSortOptions
 from sqlmodel import desc, or_, select, Session, asc
 
-from src.staff.schemas import RequestsFilters, UserFilters, UserSortOptions, RequestSortOptions
+from src.staff.schemas import RequestsFilters, UserFilters, UserSortOptions
 
 from .exceptions import PermissionDeniedError
 

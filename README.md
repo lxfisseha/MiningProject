@@ -19,3 +19,15 @@ https://miningproject-production.up.railway.app/
 - Equipment Owner: `equipmentowner@gmail.com` / `password`
 
 Open the live URL and sign in with one of the accounts or create a new account to explore the app.
+
+## Important Disclaimer
+
+This is a **demo/portfolio project**, not a production-ready application. Please keep the following in mind:
+
+- **Not hosting-ready** — uses SQLite (a dev database), local file storage, and has no real deployment pipeline.
+- **Security is intentionally weak** — hardcoded secrets, no proper credential management, and no production-grade auth hardening.
+- **May contain bugs** — some bugs and issues are **intentionally left in** the codebase for learning/review purposes. Do not judge the developer's coding skills based on this repo.
+- **Missing production features** — no CI/CD, no background jobs, no caching, no structured logging, no health checks, no integration tests.
+- **Incomplete areas** — some features are stubbed out or have placeholder code.
+
+This project is meant to demonstrate FastAPI + HTMX architecture patterns, not to serve as a reference for production systems.

@@ -7,7 +7,6 @@ from typing import Annotated
 from ..database import SESSION_DEP
 from ..auth.dependencies import CURRENT_USER_FROM_COOKIE
 from . import config
-import time
 
 
 from .schemas import RequestFilters, RequestCreate, RequestUpdate
@@ -206,7 +205,6 @@ async def requests_table(
     filters: RequestFilters = Depends(),
 ):
 
-    time.sleep(0.5)
     requests = get_my_requests(session, current_user, filters)
 
     return templates.TemplateResponse(

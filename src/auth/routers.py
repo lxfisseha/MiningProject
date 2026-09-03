@@ -1,5 +1,3 @@
-import time
-
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Depends
@@ -119,8 +117,6 @@ async def edit_user(
 ):
     form_data = await request.form()
     data = UserUpdate(**dict(form_data))
-    time.sleep(1)
-
     update_user(current_user, current_user.id, data, session)
 
     return templates.TemplateResponse(

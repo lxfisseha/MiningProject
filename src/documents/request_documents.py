@@ -85,7 +85,6 @@ class RequestDocumentsService():
         saved_files = []
 
         for field_name, config in config_dict.items():
-            print("here are the docs we found: ", docs)
             file: UploadFile | None = docs.get(field_name)
             sub_dir = config.type.value.lower() + "s"
             try:
