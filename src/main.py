@@ -25,6 +25,7 @@ from slowapi.errors import RateLimitExceeded
 
 from .csrf_protection import CSRFValidationError, csrf_validation_exception_handler, csrf_protect
 from .database import engine
+from .seed import seed_demo_users
 
 app = FastAPI(dependencies=[Depends(csrf_protect)])
 
@@ -38,6 +39,7 @@ app.add_middleware(SlowAPIMiddleware)
 @app.on_event("startup")
 def on_startup():
     SQLModel.metadata.create_all(engine)
+    seed_demo_users()
 
 
 app.include_router(auth_router)
