@@ -1,8 +1,5 @@
 ﻿# MiningProject
 
-Try the live demo here:
-https://miningproject-production.up.railway.app/
-
 ## What you can try
 - Register and log in (make sure to approve the new user by logging in to the admin)
 - Create profile for mining roles
@@ -31,3 +28,15 @@ This is a **demo/portfolio project**, not a production-ready application. Please
 - **Incomplete areas** — some features are stubbed out or have placeholder code.
 
 This project is meant to demonstrate FastAPI + HTMX architecture patterns, not to serve as a reference for production systems.
+
+## Deploy to Koyeb
+
+1. Push this repo to GitHub
+2. Go to [Koyeb Control Panel](https://app.koyeb.com/) and click **Create Web Service**
+3. Select **GitHub** as the deployment method
+4. Select your repository and branch
+5. Choose **Dockerfile** as the builder
+6. Set the **Port** to `8000`
+7. Click **Deploy**
+
+Your app will be live at `https://<your-app-name>-<your-org>.koyeb.app`
