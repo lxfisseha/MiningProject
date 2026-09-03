@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI, Request
 from starlette.responses import RedirectResponse
 from pydantic_core import ValidationError
+from sqlmodel import SQLModel
 
 from .auth.exceptions import (
     LoginRequiredError,
@@ -23,6 +24,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.errors import RateLimitExceeded
 
 from .csrf_protection import CSRFValidationError, csrf_validation_exception_handler, csrf_protect
+from .database import engine
 
 app = FastAPI(dependencies=[Depends(csrf_protect)])
 
@@ -31,6 +33,11 @@ templates = Jinja2Templates("templates")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
 app.add_middleware(SlowAPIMiddleware)
+
+
+@app.on_event("startup")
+def on_startup():
+    SQLModel.metadata.create_all(engine)
 
 
 app.include_router(auth_router)
