@@ -31,8 +31,7 @@ from .seed import seed_demo_users
 
 class HTTPSRedirectMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
-        if request.headers.get("x-forwarded-proto") == "https":
-            request.scope["scheme"] = "https"
+        request.scope["scheme"] = "https"
         return await call_next(request)
 
 
