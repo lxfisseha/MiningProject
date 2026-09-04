@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI, Request
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import RedirectResponse
 from pydantic_core import ValidationError
 from sqlmodel import SQLModel
@@ -27,6 +28,14 @@ from .csrf_protection import CSRFValidationError, csrf_validation_exception_hand
 from .database import engine
 from .seed import seed_demo_users
 
+
+class HTTPSRedirectMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        if request.headers.get("x-forwarded-proto") == "https":
+            request.scope["scheme"] = "https"
+        return await call_next(request)
+
+
 app = FastAPI(dependencies=[Depends(csrf_protect)])
 
 templates = Jinja2Templates("templates")
@@ -34,6 +43,7 @@ templates = Jinja2Templates("templates")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
 app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(HTTPSRedirectMiddleware)
 
 
 @app.on_event("startup")
