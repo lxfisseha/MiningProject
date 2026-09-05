@@ -1,19 +1,19 @@
-from sqlmodel import  create_engine, Session
+from sqlmodel import create_engine, Session
 from fastapi import Depends
 from typing import Annotated
 
-from pydantic_settings import BaseSettings
-from pydantic import  AnyUrl
 from .config import settings
 
-class DBSettings(BaseSettings):
-    DATABASE_URL: str = settings.DATABASE_URL
-    echo: bool = False
-    connect_args: dict = {"check_same_thread": False}
+connect_args = {}
+if settings.DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
 
-db_settings = DBSettings()
-
-engine = create_engine(db_settings.DATABASE_URL, echo=db_settings.echo, connect_args=db_settings.connect_args)
+engine = create_engine(
+    settings.DATABASE_URL,
+    echo=False,
+    connect_args=connect_args,
+    pool_pre_ping=True,
+)
 
 
 def get_session():
