@@ -1,3 +1,4 @@
+import os
 import uuid
 from pathlib import Path
 from fastapi import UploadFile
@@ -9,10 +10,19 @@ from .schemas import (
 )
 
 
+def _get_base_dir() -> Path:
+    if os.environ.get("VERCEL"):
+        return Path("/tmp/uploads")
+    return Path("uploads")
+
+
 class FileStorageService:
-    def __init__(self, base_dir: Path = Path("uploads")):
-        self.base_dir = base_dir
-        self.base_dir.mkdir(parents=True, exist_ok=True)
+    def __init__(self, base_dir: Path = None):
+        self.base_dir = base_dir or _get_base_dir()
+        try:
+            self.base_dir.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            pass
 
     def _generate_filename(self, original_filename: str) -> str:
         ext = Path(original_filename).suffix
@@ -20,7 +30,10 @@ class FileStorageService:
 
     def _generate_path(self, subdir: str, filename: str) -> Path:
         dir_path = self.base_dir / subdir
-        dir_path.mkdir(parents=True, exist_ok=True)
+        try:
+            dir_path.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            pass
         return dir_path / filename
 
     async def save(

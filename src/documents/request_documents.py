@@ -98,10 +98,10 @@ class RequestDocumentsService():
             
                 saved_file = await self.document_service.save_document(file, sub_dir)
                 saved_files.append((saved_file, config))
-            except Exception as e: 
+            except Exception as e:
                 await self._cleanup_files([f.file_path for f, _ in saved_files])
-                msg = e.detail or ""
-                raise UnableToSaveDocumentError(f"Failed to save file for {field_name}. {e}")
+                msg = getattr(e, 'detail', str(e)) or ""
+                raise UnableToSaveDocumentError(f"Failed to save file for {field_name}. {msg}")
 
         for saved_file, config in saved_files:
             try:
